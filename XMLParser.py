@@ -2,16 +2,20 @@ import untangle
 import os
 from Schema import Schema
 
+
 def parse_xml():
 
     schemes = []
 
-    # Reading the XML file
+    # Loading the XML file
     script_dir = os.path.dirname(__file__)
     rel_path = "sources/WSCollection.xml"
     path = os.path.join(script_dir, rel_path)
+    id = 0
 
+    # Reading the XML file
     for schema in untangle.parse(path).collection.schema:
+
         # Getting the text
         text1 = schema.text.txt1.cdata
         pron = schema.text.pron.cdata
@@ -40,33 +44,13 @@ def parse_xml():
 
         source = schema.source.cdata
 
-        new_schema = Schema( text, snippet, pron, answer_a, answer_b, correct, source)
+        new_schema = Schema(id, text, snippet, pron, answer_a, answer_b, correct, source)
         schemes.append(new_schema)
+        id += 1
 
     return schemes
 
 
-print(len(parse_xml()))
-
-"""
-<collection>
-    <schema>
-        <text>
-            <txt1> The city councilmen refused the demonstrators a permit because </txt1>
-            <pron> they </pron>
-            <txt2> feared violence.</txt2>
-        </text>
-        <quote>
-            <quote1></quote1>
-            <pron>they </pron>
-            <quote2>feared violence</quote2>
-        </quote>
-        <answers>
-            <answer>The city councilmen </answer>
-            <answer>The demonstrators </answer>
-        </answers>
-        <correctAnswer> A  </correctAnswer>
-        <source> (Winograd 1972) </source>
-    </schema>
-</collection>
-"""
+input = parse_xml()
+print(len(input))
+input[0].print()

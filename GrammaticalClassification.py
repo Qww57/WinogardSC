@@ -2,9 +2,7 @@ import treetaggerwrapper
 import unittest
 
 
-
 class TreeTaggerWord:
-
     def __init__(self, triplet):
         self.word, self.postag, self.lemma = triplet
 
@@ -53,9 +51,7 @@ class TestAnalyze(unittest.TestCase):
 
     def test_analyze(self):
         results = analyze(self.example)
-        print("{}".format(results))
         print("Words tagged:{}".format(tag_list(self.example)))
         for r in results:
             print("Word: {}, postag: {}, lemma: {}".format(r.word, r.postag, r.lemma))
         self.assertGreater(len(results), 2)
-

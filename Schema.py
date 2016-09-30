@@ -12,30 +12,40 @@ class Schema:
         :param prop2: second possible reference of the word
         :param answer: correct answer among the two proposition
         """
-        self._ID = ID
-        self._sentence = sentence
-        self._snippet = snip
-        self._pronoun = pron
-        self._answer_A = prop1
-        self._answer_B = prop2
+        self.ID = ID
+        self.sentence = sentence
+        self.snippet = snip
+        self.pronoun = pron
+        self.answer_A = prop1
+        self.answer_B = prop2
         if 'A' in answer:
-            self._correct = prop1
+            self.correct = prop1
         else:
-            self._correct = prop2
-        self._source = source
-        self._type = "default"
+            self.correct = prop2
+        self.source = source
+        self.type = "default"
 
     def set_type(self, type):
-        self._type = type
+        self.type = type
 
     def get_type(self):
-        return self._type
+        return self.type
+
+    def validate(self):
+        valide = (isinstance(self.answer_A, str)
+                  and isinstance(self.answer_B, str)
+                  and isinstance(self.ID, int)
+                  and isinstance(self.sentence, str)
+                  and isinstance(self.snippet, str)
+                  and isinstance(self.pronoun, str)
+                  and isinstance(self.correct, str))
+        return valide
 
     def print(self):
-        print("----- Winograd Schema number " + str(self._ID) + " -----")
-        print("Text: {}".format(self._sentence))
-        print("Snippet: {}".format(self._snippet))
-        print("Choices for '" + self._pronoun + "': A) " + self._answer_A + ",  or B) " + self._answer_B)
-        print("Answer: " + self._correct)
-        print("Source: " + self._source)
+        print("----- Winograd Schema number " + str(self.ID) + " -----")
+        print("Text: {}".format(self.sentence))
+        print("Snippet: {}".format(self.snippet))
+        print("Choices for '" + self.pronoun + "': A) " + self.answer_A + ",  or B) " + self.answer_B)
+        print("Answer: " + self.correct)
+        print("Source: " + self.source)
         print("")

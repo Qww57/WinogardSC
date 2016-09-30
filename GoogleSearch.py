@@ -53,40 +53,46 @@ class GoogleSearch:
         for result in self.gse_results:
             pprint.pprint(result)
 
+
+
     tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
-    def tokenize(self, gse_results):
+    def tokenize(self, gse_result):
+
+        # Converting the HTML text to String
+        url = gse_result[u'link']
+        print(url)
+        f = urllib.request.urlopen(url)
+        mybytes = f.read()  # read bytes from url
+        f.close()
+        mystr = mybytes.decode("utf8")  # decodes bytes to string
+
+        # Deleting all the HTML characters
+        soup = BeautifulSoup(mystr, "html.parser")
+        raw_text = soup.get_text()
+
+        # Deleting empty lines
+        raw_text = os.linesep.join([s for s in raw_text.splitlines() if s])
+
+        # Tokenizing the text into sentences based on punctuation
+        sentences = self.tokenizer.tokenize(raw_text)
+
+        # Tokenizing the text into sentences based on layout
+        set = []
+        for sentence in sentences:
+            lines = sentence.splitlines()
+            for line in lines:
+                word_groups = line.split('\\s{2,}')
+                for group in word_groups:
+                    set.append(group)
+        return set
+
+    def generate_sentences(self, gse_results):
         results = []
 
-        # For each page in the results
+         # For each page in the results
         for result in gse_results:
-
-            # Converting the HTML text to String
-            url = result[u'link']
-            print(url)
-            f = urllib.request.urlopen(url)
-            mybytes = f.read()  # read bytes from url
-            f.close()
-            mystr = mybytes.decode("utf8")  # decodes bytes to string
-
-            # Deleting all the HTML characters
-            soup = BeautifulSoup(mystr, "html.parser")
-            raw_text = soup.get_text()
-
-            # Deleting empty lines
-            raw_text = os.linesep.join([s for s in raw_text.splitlines() if s])
-
-            # Tokenizing the text into sentences based on punctuation
-            sentences = self.tokenizer.tokenize(raw_text)
-
-            # Tokenizing the text into sentences based on layout
-            set = []
-            for sentence in sentences:
-                lines = sentence.splitlines()
-                for line in lines:
-                    word_groups = line.split('\\s{2,}')
-                    for group in word_groups:
-                        set.append(group)
+            set = self.tokenize(result)
 
             # Filtering the sentences by selecting the ones containing the search items
             filtered = []
@@ -112,6 +118,7 @@ def should_add(search_terms, sentence):
             attach = False;
     return attach
 
+"""
 print(should_add(["cat"], "cat is huge man") is True)
 print(should_add(["elephant"], "cat is huge man") is False)
 print(should_add(["cat", "man"], "cat is huge man") is True)
@@ -128,5 +135,5 @@ print(len(knowledge_sentences))
 
 for sentence in knowledge_sentences:
     print("Sentence: " + sentence)
-
+"""
 

@@ -13,7 +13,7 @@ class NaiveBayesClassifier():
 
         # Creation of the feature set
         schemes = parse_xml()
-        feature_sets = [(self.features(schema), schema._correct) for schema in schemes]
+        feature_sets = [(self.features(schema), schema.correct) for schema in schemes]
         random.shuffle(feature_sets)
 
         for feature in feature_sets:
@@ -39,8 +39,8 @@ class NaiveBayesClassifier():
             if not word in stopwords:
                 features['contains({})'.format(word.lower())] = True
         """
-        features['Answer_A'] = schema._answer_A
-        features['Answer_B'] = schema._answer_B
+        features['Answer_A'] = schema.answer_A
+        features['Answer_B'] = schema.answer_B
 
         return features
 

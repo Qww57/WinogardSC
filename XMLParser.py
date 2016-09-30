@@ -1,5 +1,6 @@
 import untangle
 import os
+import unittest
 from Schema import Schema
 
 
@@ -51,6 +52,10 @@ def parse_xml():
     return schemes
 
 
-input = parse_xml()
-print(len(input))
-input[0].print()
+class Test_XMLParser(unittest.TestCase):
+
+    def test_parse_XML(self):
+        schema_set = parse_xml()
+        self.assertEqual(len(schema_set), 273)
+        for schema in schema_set:
+            self.assertTrue(schema.validate())

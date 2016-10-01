@@ -1,7 +1,9 @@
-import untangle
 import os
 import unittest
-from Schema import Schema
+
+import untangle
+
+from Model.Schema import Schema
 
 
 def parse_xml():
@@ -10,7 +12,7 @@ def parse_xml():
 
     # Loading the XML file
     script_dir = os.path.dirname(__file__)
-    rel_path = "sources/WSCollection.xml"
+    rel_path = "WSCollection.xml"
     path = os.path.join(script_dir, rel_path)
     id = 0
 
@@ -62,7 +64,7 @@ def add_labels_ECC(schemes):
             schema.set_type("NONE")
 
 
-class Test_XMLParser(unittest.TestCase):
+class TestXMLParser(unittest.TestCase):
 
     def test_parse_XML(self):
         schema_set = parse_xml()

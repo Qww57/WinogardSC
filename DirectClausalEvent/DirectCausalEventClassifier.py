@@ -1,8 +1,7 @@
-from GrammaticalClassification import *
-from XMLParser import parse_xml, add_labels_ECC
 import random
-import nltk
-import unittest
+
+from ToolsForNLP.GrammaticalClassification import *
+from sources.XMLParser import parse_xml, add_labels_ECC
 
 
 class DirectCausalEventClassifier:

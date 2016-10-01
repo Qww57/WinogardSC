@@ -68,8 +68,6 @@ def sense(word, hint, confidence):
 print(sense("councilman", "violence", 0.1).definition())
 print(sense("demonstrator", "violence", 0.1).definition())
 
-print(sense("", "", 0.1).definition())
-
 """
 s1 = wn.synsets("councilman")
 s2 = wn.synsets("demonstrator")
@@ -104,7 +102,7 @@ for s in s3:
 """
 
 
-class SemanticFieldExample(unittest.TestCase):
+class TestSemanticalClassification(unittest.TestCase):
 
     def test_example(self):
         # Testing to get the semantic field of specific key words

@@ -1,12 +1,14 @@
-import sqlite3
-import wikipedia
 import os
-from wikipedia.wikipedia import WikipediaPage
-from nltk.corpus import words
-import unittest
-import string
 import random
-from GoogleSearch import should_add
+import sqlite3
+import string
+import unittest
+
+import wikipedia
+from nltk.corpus import words
+from wikipedia.wikipedia import WikipediaPage
+
+from CommonKnowledgeDataBase.GoogleSearch import should_add
 
 
 class Article:

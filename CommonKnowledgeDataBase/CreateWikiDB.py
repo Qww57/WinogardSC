@@ -1,5 +1,6 @@
-from WikipediaDatabase import WikipediaDatabase
 import warnings
+
+from CommonKnowledgeDataBase.WikipediaDatabase import WikipediaDatabase
 
 warnings.filterwarnings("ignore")
 

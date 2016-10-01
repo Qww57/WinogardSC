@@ -71,10 +71,10 @@ def detect_first_names(text):
     return [token for token in tokens if not token.islower() and not token.isupper()]
 
 
-class Test_Tokenizer(unittest.TestCase):
+class TestTokenizer(unittest.TestCase):
 
-     def test_detect_first_names(self):
-         text = "Mary and Ann are standing hand in hand"
-         names = detect_first_names(text)
-         expected = ["Mary", "Ann"]
-         print(names)
+    def test_detect_first_names(self):
+        text = "Mary and Ann are standing hand in hand"
+        names = detect_first_names(text)
+        expected = ["Mary", "Ann"]
+        self.assertTrue(expected == names)

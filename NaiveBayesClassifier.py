@@ -1,14 +1,11 @@
 import nltk
 import random
 from XMLParser import parse_xml
-from nltk.tokenize import RegexpTokenizer
 
 
-class NaiveBayesClassifier():
+class AnswerNaiveBayesClassifier:
 
     def __init__(self):
-
-        self.language = "english"
         self.accuracy = 0
 
         # Creation of the feature set
@@ -33,12 +30,6 @@ class NaiveBayesClassifier():
         features = {}
 
         # TODO find real good features that can be used depending of type of schema
-        # Features related to the words appareance
-        """stopwords = set(nltk.corpus.stopwords.words(self.language))
-        for word in RegexpTokenizer(r'\w+').tokenize(schema._sentence):
-            if not word in stopwords:
-                features['contains({})'.format(word.lower())] = True
-        """
         features['Answer_A'] = schema.answer_A
         features['Answer_B'] = schema.answer_B
 
@@ -64,7 +55,6 @@ class NaiveBayesClassifier():
         print("{} wrong possible answers over {} questions".format(bullshit, len(parse_xml())))
 
 
-classifier = NaiveBayesClassifier()
+classifier = AnswerNaiveBayesClassifier()
 classifier.answer(parse_xml()[125])
-classifier.guess_answer()
 

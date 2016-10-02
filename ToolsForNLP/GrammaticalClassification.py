@@ -21,7 +21,6 @@ class TreeTaggerList:
 
     def __iter__(self):
         return self
-        # return self.tree_word_list[self.index]
 
     def __next__(self):
         try:
@@ -76,9 +75,6 @@ def analyze(sentence):
         for w in output:
             words.append(TreeTaggerWord(w.split("\t")))
         return words
-
-
-
 
     data = TreeTaggerList(tag(tags))
     return data

@@ -14,7 +14,7 @@ class DirectCausalEventClassifier:
 
         # Creation of the feature set
         schemes = parse_xml()
-        add_labels_ECC(schemes) # Only done on the 40 first ones
+        add_labels_ECC(schemes) # Only done on the 40 first ones TODO other ones
         feature_sets = [(self.features(schema), schema.get_type()) for schema in schemes[0:41]]
         random.shuffle(feature_sets)
 
@@ -37,10 +37,14 @@ class DirectCausalEventClassifier:
         snippet = analyze(schema.snippet)
         sentence = analyze(schema.sentence)
 
-        # TODO maybe should be here the diff between sentence and snippet to avoid redundancy
-        features['sentence'] = str(sentence.get_tag_sequence())
+        # TODO maybe should be here the diff between sentence and snippet to avoid redundancy + Specific sequence
+        # X action Y link Z action / trait
+        # features['sentence'] = str(sentence.get_tag_sequence())
+
+        # TODO should be different here, maybe something like a true false on a specific sequence
         features['snippet'] = str(snippet.get_tag_sequence())
 
+        # TODO categorize type of verb like action or state
         verb_set = [word.lemma for word in snippet if "VV" in word.postag]
         if verb_set:
             features['snippet_verb'] = verb_set[0]
@@ -49,11 +53,14 @@ class DirectCausalEventClassifier:
 
         # TODO not good enough here since Tree Tagger confuses preposition and conjunctions
         # TODO and we want only conjunctions --> use of NLTK
+        # TODO replace then by type of conjonction (causal, concession, etc)
         link_set = [word.lemma for word in sentence if word.postag == "IN"]
         if link_set:
             features['logical_link'] = link_set[0]
         else:
             features['logical_link'] = ""
+
+        # TODO add feature with case of the Y, COI or COD
 
         return features
 

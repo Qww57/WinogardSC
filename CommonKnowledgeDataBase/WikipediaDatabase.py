@@ -1,14 +1,12 @@
+from nltk.corpus import words
+from wikipedia.wikipedia import WikipediaPage
+from ToolsForNLP import Tokenizer
 import os
 import random
 import sqlite3
 import string
 import unittest
-
 import wikipedia
-from nltk.corpus import words
-from wikipedia.wikipedia import WikipediaPage
-
-from CommonKnowledgeDataBase.GoogleSearch import should_add
 
 
 class Article:
@@ -62,34 +60,6 @@ class WikipediaDatabase():
             )
         """)
         self.conn.commit()
-
-    def add_article(self, topic):
-        """
-        TO DELETE
-
-        Add one article to the current database
-        :param topic: one potential wikipedia article
-        :return: update of database
-        """
-        new_articles = []
-        try:
-            article = WikipediaPage(topic)
-            isinstance(article, WikipediaPage)
-        except wikipedia.exceptions.DisambiguationError as e:
-            for suggestion in e.options:
-                new_articles.append(WikipediaPage(suggestion))
-        except Exception as e:
-            print(e)
-
-        self.connect()
-        try:
-            self.cursor.execute("""INSERT INTO articles(title, content, url, keywords) VALUES(?, ?, ?, ?)""",
-                            (article.title, article.content, article.url, article.summary))
-            self.conn.commit()
-        except Exception as e:
-            print(e)
-            self.conn.rollback()
-        self.conn.close()
 
     def add_many_articles(self, topics):
         """
@@ -176,16 +146,11 @@ class WikipediaDatabase():
         self.conn.close()
         return articles
 
-    def get_articles_by_keyword(self, keywords):
+    def get_articles_by_keywords(self, keywords):
         articles = self.get_all_articles()
-        selection = []
-        for article in articles:
-            if should_add(keywords, article.content):
-                selection.append(article)
-        return selection
+        return [article for article in articles if Tokenizer.should_add(keywords, article.content, "Inclusive")]
 
     def delete_database(self):
-        created = False
         dir_path = os.path.dirname(os.path.realpath(__file__))
         for root, dirs, files in os.walk(dir_path, topdown=False):
             for n in files:
@@ -195,6 +160,8 @@ class WikipediaDatabase():
 
 
 class TestWikipediaDatabase(unittest.TestCase):
+
+    # FIXME FIND THE ONE THAT DOES NOT DELETE THE DATABASE
 
     def test_is_db_created(self):
         name = ''.join(random.choice(string.ascii_lowercase) for x in range(10))
@@ -231,6 +198,7 @@ class TestWikipediaDatabase(unittest.TestCase):
         name = ''.join(random.choice(string.ascii_lowercase) for x in range(10))
         database = WikipediaDatabase(name)
         database.add_new_articles(12, 15)
+
         # The article Bad_Sobernheim contains the word Germany
-        self.assertEqual(len(database.get_articles_by_keyword(["Germany"])), 1)
+        self.assertEqual(len(database.get_articles_by_keywords(["Germany"])), 1)
         database.delete_database()

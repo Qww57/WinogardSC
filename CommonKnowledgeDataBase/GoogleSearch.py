@@ -1,10 +1,11 @@
 from googleapiclient.discovery import build
 from bs4 import BeautifulSoup
-from nltk.tokenize import wordpunct_tokenize
+from ToolsForNLP import Tokenizer
 import pprint
 import os
 import nltk.data
 import urllib.request
+import unittest
 
 
 class GoogleSearch:
@@ -58,6 +59,11 @@ class GoogleSearch:
     tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
     def tokenize(self, gse_result):
+        """
+
+        :param gse_result:
+        :return:
+        """
 
         # Converting the HTML text to String
         url = gse_result[u'link']
@@ -90,14 +96,14 @@ class GoogleSearch:
     def generate_sentences(self, gse_results):
         results = []
 
-         # For each page in the results
+        # For each page in the results
         for result in gse_results:
             set = self.tokenize(result)
 
             # Filtering the sentences by selecting the ones containing the search items
             filtered = []
             for sentence in set:
-                if should_add(self.search_terms, sentence):
+                if Tokenizer.should_add(self.search_terms, sentence):
                     results.append(sentence)
 
             # Adding the sentences to the results.
@@ -111,29 +117,18 @@ class GoogleSearch:
         # Then should have at least a verb
 
 
-def should_add(search_terms, sentence):
-    attach = True;
-    for term in search_terms:
-        if term not in wordpunct_tokenize(sentence):
-            attach = False;
-    return attach
+class TestGoogleSearch(unittest.TestCase):
 
-"""
-print(should_add(["cat"], "cat is huge man") is True)
-print(should_add(["elephant"], "cat is huge man") is False)
-print(should_add(["cat", "man"], "cat is huge man") is True)
-print(should_add(["cat", "rat"], "cat is huge man") is False)
+    def test_research(self):
+        gs = GoogleSearch()
+        request = '\"police * demonstrator\"'
+        search_terms = ['police', 'demonstrator']
+        gse_pages = gs.google_search(request, search_terms)
+        knowledge_sentences = gs.tokenize(gse_pages)
 
+        print(len(knowledge_sentences))
 
-gs = GoogleSearch()
-request = '\"police * demonstrator\"'
-search_terms = ['police', 'demonstrator']
-gse_pages = gs.google_search(request, search_terms)
-knowledge_sentences = gs.tokenize(gse_pages)
+        for sentence in knowledge_sentences:
+            print("Sentence: " + sentence)
 
-print(len(knowledge_sentences))
-
-for sentence in knowledge_sentences:
-    print("Sentence: " + sentence)
-"""
 

@@ -55,6 +55,7 @@ def parse_xml():
 
 
 def add_labels_ECC(schemes):
+    # TODO add more, stopped at 40 for now.
     ECC = [3, 4, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 23, 24, 25, 26, 35, 36, 39, 40]
     ECC_unsure = [7, 8]
     for schema in schemes:

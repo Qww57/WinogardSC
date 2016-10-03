@@ -46,7 +46,7 @@ def get_frequent_related_itemsets(keywords, support):
     return results
 
 get_frequent_related_itemsets(["Dog"], 5)
-get_frequent_related_itemsets(["Cat", "Eat"], 5)
+cat = get_frequent_related_itemsets(["Cat", "Food"], 5)
 get_frequent_related_itemsets(["Germany"], 2)
 
 
@@ -54,6 +54,7 @@ class TestSentenceDataBase(unittest.TestCase):
 
     def get_sentences(self): #TODO PROPERLY
         sentences = get_sentences(["Dog", "Cat"], "Inclusive")
+        self.assertGreaterEqual(len(sentences), 0)
         print(len(sentences))
         sentences.extend(get_sentences(["Cat", "Mouse"], "Exclusive"))
         print(len(sentences))

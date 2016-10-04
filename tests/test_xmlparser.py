@@ -4,7 +4,7 @@ import unittest
 
 class TestXMLParser(unittest.TestCase):
 
-    def parse_XML(self):
+    def test_parse_XML(self):
         schema_set = parse_xml()
         self.assertEqual(len(schema_set), 273)
         for schema in schema_set:

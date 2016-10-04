@@ -1,10 +1,6 @@
+from winosolver.schema.Schema import Schema
 import os
-import unittest
-
 import untangle
-
-from winosolver.schema import Schema
-
 
 def parse_xml():
 
@@ -64,4 +60,3 @@ def add_labels_ECC(schemes):
         for element in DCE:
             if schema.ID in element:
                 schema.set_type("DCE")
-s

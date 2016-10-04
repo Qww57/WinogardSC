@@ -18,4 +18,5 @@ class TestTokenizer(unittest.TestCase):
         text = "Mary and Ann are standing hand in hand"
         names = detect_first_names(text)
         expected = ["Mary", "Ann"]
-        self.assertTrue(expected == names)
+        self.assertTrue(expected[0] in names)
+        self.assertTrue(expected[1] in names)

@@ -1,8 +1,8 @@
 import warnings
 
-from CommonKnowledgeDataBase.WikipediaDatabase import WikipediaDatabase
-from ToolsForNLP import Tokenizer
-from Sources import XMLParser
+from winosolver.commonknowledge.WikipediaDatabase import WikipediaDatabase
+from winosolver.nlptools import Tokenizer
+from winosolver.schema import XMLParser
 
 warnings.filterwarnings("ignore")
 
@@ -16,16 +16,14 @@ def main():
     # Getting the related information
     words = Tokenizer.meaningful_words(current.sentence)
     print(words)
-    database = WikipediaDatabase('main')
+    database = WikipediaDatabase('winosolver/commonknowledge/WordListDB')
     words = [token for token in words if token.islower()]
     print(words)
-    articles = database.add_many_articles(words)
-    database.print_all_articles()
+    print(len(database.get_all_articles()))
 
     # Grammatical analysis
 
-
-    articles
-
-
 main()
+
+import os
+os.system("pause")

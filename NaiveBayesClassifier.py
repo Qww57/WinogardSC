@@ -2,7 +2,7 @@ import random
 
 import nltk
 
-from sources.XMLParser import parse_xml
+from Sources.XMLParser import parse_xml
 
 
 class AnswerNaiveBayesClassifier:

@@ -1,13 +1,13 @@
 import unittest
 from CommonKnowledgeDataBase.WikipediaDatabase import TestWikipediaDatabase
 # TODO from CommonKnowledgeDataBase.GoogleSearch import GoogleSearchTest
-from DirectClausalEvent.DirectCausalEventClassifier import TestDirectClausalEventClassifier
-from DirectClausalEvent.DirectCausalEventSolver import TestDirectCausalEventSolver
+from DirectCausalEvent.DirectCausalEventClassifier import TestDirectCausalEventClassifier
+from DirectCausalEvent.DirectCausalEventSolver import TestDirectCausalEventSolver
 # TODO from ToolsForNLP.Serializer import
 from ToolsForNLP.Tokenizer import TestTokenizer
 from ToolsForNLP.GrammaticalClassification import TestAnalyze
 from ToolsForNLP.SemanticalClassification import TestSemanticalClassification
-from sources.XMLParser import TestXMLParser
+from Sources.XMLParser import TestXMLParser
 # TODO from Model.Schema import TestSchema
 # TODO from NaiveBayesClassifier import
 

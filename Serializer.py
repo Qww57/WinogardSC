@@ -1,21 +1,36 @@
 import pickle
 
 
-class Serializer:
-
+def save(object_to_save, object_name):
     """
-    Class using the library pickle in order to serialize objects.
+    Serialize an object as *.pickle.
+    :param object_to_save: object that should be saved
+    :param object_name: name for the saved object
+    :return:
     """
-
-    def save(object, object_name):
+    try:
         name = object_name + '.pickle'
         f = open(name, 'wb')
-        pickle.dump(object, f)
+        pickle.dump(object_to_save, f)
         f.close()
+        return True
+    except Exception as e:
+        print(e.with_traceback())
+        return False
 
-    def load(object_name):
+
+def load(object_name):
+    """
+    Load a *.pickle object as an object
+    :param object_name: name of the saved object
+    :return: saved object if any, None if none
+    """
+    try:
         name = object_name + '.pickle'
         f = open(name, 'rb')
-        classifier = pickle.load(f)
+        saved_object = pickle.load(f)
         f.close()
-        return classifier
+        return saved_object
+    except Exception as e:
+        print(e.with_traceback())
+        return None

@@ -2,7 +2,7 @@ import warnings
 
 from CommonKnowledgeDataBase.WikipediaDatabase import WikipediaDatabase
 from ToolsForNLP import Tokenizer
-from sources import XMLParser
+from Sources import XMLParser
 
 warnings.filterwarnings("ignore")
 

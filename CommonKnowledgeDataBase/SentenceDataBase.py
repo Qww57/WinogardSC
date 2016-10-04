@@ -24,6 +24,7 @@ def get_sentences(keywords, type):
         tokens = Tokenizer.interesting_sentences(article.content, keywords, type)
         if tokens:
             sentences.extend(tokens)
+    print(str(len(list(set(sentences)))) + " sentences found in the database for " + str(keywords))
     return list(set(sentences))
 
 
@@ -33,7 +34,8 @@ def plural(word):
 
 
 def get_frequent_related_itemsets(keywords, support):
-    sentences = get_sentences(keywords, "Inclusive")
+    # Get sentences
+    sentences = get_sentences(keywords, "Exclusive")
     keywords = [word.lower() for word in keywords]
     tokens = [Tokenizer.meaningful_words(sentence) for sentence in sentences]
     relim_input = itemmining.get_relim_input(tuple(tokens))
@@ -43,17 +45,25 @@ def get_frequent_related_itemsets(keywords, support):
         results.extend([itemset for itemset in report if word in itemset or plural(word) in itemset])
     results = list(set(results))
     print(str(len(results)) + " frequent item sets with min support of " + str(support) + " for " + str(keywords))
-    return results
+    return results, sentences
 
-get_frequent_related_itemsets(["Dog"], 5)
-cat = get_frequent_related_itemsets(["Cat", "Food"], 5)
-get_frequent_related_itemsets(["Germany"], 2)
+"""get_frequent_related_itemsets(["dog"], 5)
+get_frequent_related_itemsets(["cat", "eats"], 5)
+get_frequent_related_itemsets(["cats", "eat"], 5)
+"""
+# Causal relation so happened before
+results = []
+results.extend(get_frequent_related_itemsets(["asked", "forgot"], 5)[1])
+results.extend(get_frequent_related_itemsets(["asks", "forgot"], 5)[1])
+results.extend(get_frequent_related_itemsets(["ask", "forget"], 5)[1])
+for result in results:
+    print(result)
 
 
 class TestSentenceDataBase(unittest.TestCase):
 
-    def get_sentences(self): #TODO PROPERLY
-        sentences = get_sentences(["Dog", "Cat"], "Inclusive")
+    def get_sentences(self):  # TODO PROPERLY
+        sentences = get_sentences(["Dog", "Cat"], "Additive")
         self.assertGreaterEqual(len(sentences), 0)
         print(len(sentences))
         sentences.extend(get_sentences(["Cat", "Mouse"], "Exclusive"))

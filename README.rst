@@ -1,8 +1,7 @@
 Winosolver: Winograd Schema Solver
 =======================
 
-Student project trying to solve some schema from the `Winograd Challenge
- <http://commonsensereasoning.org/winograd.html>`_.
+Student project trying to solve some schema from the `Winograd Challenge <http://commonsensereasoning.org/winograd.html>`_.
 
 This projects does not aim to cover all the possible schema types but focuses on
 type of them. Its objective is to detect them among all other schema and to solve

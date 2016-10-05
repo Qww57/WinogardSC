@@ -50,13 +50,13 @@ def parse_xml():
     return schemes
 
 
-def add_labels_ECC(schemes):
-    # TODO add more, stopped at 40 for now.
-    DCE = [[0, 1], [6, 7], [8, 9], [10, 11], [14, 15], [22, 23], [28, 29], [30, 31], [33, 34],
+def add_labels(schemes):
+    dce = [[0, 1], [6, 7], [8, 9], [10, 11], [14, 15], [22, 23], [28, 29], [30, 31], [33, 34],
             [34, 35], [38, 39], [44, 45], [50,51], [68, 69], [88, 89], [134, 135], [148, 149],
-            [150, 151]]
+            [150, 151], [211, 212], [215, 216], [227, 228], [253, 254, 255], [260, 261], [262, 263],
+            [264, 265], [268, 269]]
+
     for schema in schemes:
-        schema.set_type("NONE")
-        for element in DCE:
+        for element in dce:
             if schema.ID in element:
                 schema.set_type("DCE")

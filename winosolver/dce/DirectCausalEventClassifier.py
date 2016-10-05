@@ -4,7 +4,7 @@ import nltk
 
 from winosolver import Serializer
 from winosolver.nlptools.GrammaticalClassification import *
-from winosolver.schema.XMLParser import parse_xml, add_labels_ECC
+from winosolver.schema.XMLParser import parse_xml, add_labels
 
 
 def features(schema):
@@ -61,14 +61,14 @@ class DirectCausalEventClassifier:
 
         # Creation of the feature set
         schemes = parse_xml()
-        add_labels_ECC(schemes) # Only done on the 160 first ones
-        feature_sets = [(features(schema), schema.get_type()) for schema in schemes[0:159]]
+        add_labels(schemes) # Only done on the 160 first ones
+        feature_sets = [(features(schema), schema.get_type()) for schema in schemes[0:270]]
         random.shuffle(feature_sets)
 
         # [print(feature) for feature in feature_sets] # TODO DELETE LATER
 
-        # Creating the train and test sets and training the classifier
-        self.train_set, self.dev_set, self.test_set = feature_sets[0:90], feature_sets[91:119], feature_sets[120:159]
+        # Creating the train and test sets and training the classifier: 273 * 0.632 = 172
+        self.train_set, self.dev_set, self.test_set = feature_sets[0:170], feature_sets[171:210], feature_sets[221:270]
         self.classifier = self.classifiers[classifier_type].train(self.train_set)
         self.accuracy = nltk.classify.accuracy(self.classifier, self.test_set)
         print("Accuracy of answers: {} %".format(self.accuracy * 100))

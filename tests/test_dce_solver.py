@@ -37,8 +37,8 @@ class TestDirectCausalEventSolver(unittest.TestCase):
         self.assertTrue("slow" in self.s.antonym('fast')) # Schema 11
         self.assertTrue("fast" in self.s.antonym('slow')) # Schema 12
 
-        self.assertTrue("strong" in self.s.antonym('weak')) # Schema 15
-        self.assertTrue("light" in self.s.antonym('heavy')) # Schema 16
+        self.assertTrue("strong" in self.s.antonym('weak'))  # Schema 15
+        self.assertTrue("light" in self.s.antonym('heavy'))  # Schema 16
 
         self.assertTrue("tall" in self.s.antonym('short')) # Schema 19
         self.assertTrue("short" in self.s.antonym('tall')) # Schema 20

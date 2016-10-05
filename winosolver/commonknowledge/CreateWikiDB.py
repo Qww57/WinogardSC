@@ -23,12 +23,12 @@ debut = time.time()
 # Creating a huge wikipedia data base
 database = WikipediaDatabase("WordListDB")
 print(len(database.get_all_articles()))
-for i in range(100, 130, 1):  # done until 100,max is 236 000 / 1000 = 230
+for i in range(130, 180, 1):  # done until 130, max is 236 000 / 1000 = 230
     minIndex, maxIndex = i * 1000, i * 1000 + 30
     database.add_new_articles(minIndex, maxIndex) # done until 800
+
 print(len(database.get_all_articles()))
 
 database.delete_duplicates()
 print(len(database.get_all_articles()))
 print(str((time.time() - debut) / 60) + " minutes")
-

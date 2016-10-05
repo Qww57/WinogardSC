@@ -10,11 +10,12 @@ class TestDirectCausalEventClassifier(unittest.TestCase):
 
         debut = time.time()
         c = DirectCausalEventClassifier("naive_bayes")
-        print(str((time.time() - debut) / 60) + " minutes to generate the naive bayes.")
+        print(str(int((time.time() - debut) / 60) + 1) + " minutes to generate the naive bayes.")
 
         # If interesting results, saving it
-        if c.get_accuracy() > 70:
-            name = c.get_classifier_type() + "_" + str(c.get_accuracy()) + "_" + time.strftime("%x").replace("/", "-")
+        if c.get_accuracy() > 80:
+            name = c.get_classifier_type() + "_" + str(int(c.get_accuracy())) + "_" \
+                   + time.strftime("%x").replace("/", "-")
             c.save_classifier(name)
 
         print("DCE? - " + c.answer(parse_xml()[0]))

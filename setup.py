@@ -46,5 +46,5 @@ setup(
     
     package_data={},
     
-    data_files=[('my_data', ['data/data_file'])], #TODO
+    data_files=[] #"('my_data', ['data/data_file'])], #TODO
 )

@@ -41,7 +41,7 @@ class WikipediaDatabase:
         :param name:
         """
         # TODO FIXME static path
-        self.name = "..\\data\\" + name + '.db'
+        self.name = name + '.db'
         self.conn = sqlite3.connect(self.name)
         self.cursor = self.conn.cursor()
         self.create_table()
@@ -136,9 +136,9 @@ class WikipediaDatabase:
         :return:
         """
         self.connect()
-        self.cursor.execute("""SELECT title, url FROM articles""")
+        self.cursor.execute("""SELECT id, title, url FROM articles""")
         for row in self.cursor:
-            print('{0} : {1}'.format(row[0], row[1]))
+            print('({0}) {1} : {2}'.format(row[0], row[1], row[2]))
         self.conn.close()
 
     def get_all_articles(self):

@@ -1,29 +1,52 @@
+import os
 import warnings
-
-from winosolver.commonknowledge.WikipediaDatabase import WikipediaDatabase
-from winosolver.nlptools import Tokenizer
-from winosolver.schema import XMLParser
+from winosolver.schema.Schema import Schema
 
 warnings.filterwarnings("ignore")
 
+
 def main():
-    # Read the schema set from XML
-    schema_set = XMLParser.parse_xml()
+    os.system("cls")
+
+    # Getting the user's input
+    print("---- Enter schema to solve ----")
+    sentence = input("Enter the full sentence of the schema:")
+    snippet = input("Enter the snippet:")
+    pronoun = input("Enter the ambiguous pronoun:")
+    answer_a = input("Enter answer A:")
+    answer_b = input("Enter answer B:")
+
+    current = Schema(
+        ID=-1,
+        sentence=sentence,
+        snip=snippet,
+        pron=pronoun,
+        prop1=answer_a,
+        prop2=answer_b,
+        answer="to be guessed",
+        source="console"
+    )
+
+    current.print()
 
     # Process of resolving one schema
-    current = schema_set[69]
+    print("---- CLASSIFYING THE SCHEMA ----")
+    print("TODO")
+    print(" ")
 
-    # Getting the related information
-    words = Tokenizer.meaningful_words(current.sentence)
-    print(words)
-    database = WikipediaDatabase('winosolver/commonknowledge/WordListDB')
+    print("---- SOLVING THE SCHEMA ----")
+    print("TODO")
+    print(" ")
+
+    os.system("pause")
+
+
+    """
+    database = WikipediaDatabase('commonknowledge\\WordListDB')
     words = [token for token in words if token.islower()]
     print(words)
     print(len(database.get_all_articles()))
-
-    # Grammatical analysis
+    """
 
 main()
 
-import os
-os.system("pause")

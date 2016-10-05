@@ -7,12 +7,13 @@ import unittest
 
 warnings.filterwarnings("ignore")
 
+dictionary = PyDictionary()
+
 
 class DirectCausalEventSolver:
 
-    dictionary = PyDictionary()
-
-    def antonym(self, word):
+    @staticmethod
+    def antonym(word):
         """
         Done like this because I find the result of wn more accurate for adjective
         but missing a lot of vocabulary especially for nouns.
@@ -32,8 +33,8 @@ class DirectCausalEventSolver:
                         result.append(j.antonyms()[0].name())
 
         result = list(set(result))
-        if len(result) is 0:
-            result.extend(self.dictionary.antonym(word))
+        if len(result) is 0 and dictionary.antonym(word):
+            result.extend(dictionary.antonym(word))
 
         print(word + ": " + str(result))
         return result

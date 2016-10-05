@@ -75,17 +75,18 @@ def get_main_prop(schema):
     return sentence_str
 
 
-schemas = parse_xml()
-print(get_main_prop(schemas[0]))
-print(get_main_prop(schemas[1]))
-print(get_main_prop(schemas[2]))
-
-
 def get_link(schema):
     sentence = wordpunct_tokenize(get_main_prop(schema))
     # TODO check with Gramm that it's "IN"
     return sentence[-1]
 
+"""
+schemas = parse_xml()
+print(get_main_prop(schemas[0]))
+print(get_main_prop(schemas[1]))
+print(get_main_prop(schemas[2]))
+
 print(get_link(schemas[0]))
 print(get_link(schemas[1]))
 print(get_link(schemas[2]))
+"""

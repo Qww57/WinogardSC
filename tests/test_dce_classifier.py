@@ -13,7 +13,7 @@ class TestDirectCausalEventClassifier(unittest.TestCase):
         print(str(int((time.time() - debut) / 60) + 1) + " minutes to generate the naive bayes.")
 
         # If interesting results, saving it
-        if c.get_accuracy() > 80:
+        if c.get_accuracy() > 75:
             name = c.get_classifier_type() + "_" + str(int(c.get_accuracy())) + "_" \
                    + time.strftime("%x").replace("/", "-")
             c.save_classifier(name)
@@ -29,3 +29,5 @@ class TestDirectCausalEventClassifier(unittest.TestCase):
         print("Not DCE? - " + c.answer(parse_xml()[159]))
 
         c.information(10)
+
+        c.get_confusing_matrix()

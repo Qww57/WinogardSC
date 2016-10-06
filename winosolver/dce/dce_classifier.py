@@ -90,23 +90,33 @@ class DirectCausalEventClassifier:
         :param classifier_type: schema_type of classifier chosen
         """
         self.accuracy = 0
+        self.cm = "not defined"
         self.classifier_type = classifier_type
 
         # Creation of the feature set
         schemes = parse_xml()
         add_labels(schemes) # Only done on the 160 first ones
-        feature_sets = [(features(schema), schema.get_type()) for schema in schemes[0:270]]
-        random.shuffle(feature_sets)
+        random.shuffle(schemes)
 
-        # [print(feature) for feature in feature_sets] # TODO DELETE LATER
+        # Creating the train, dev and test sets: 273 * 0.632 = 172
+        self.train_schemes, self.dev_schemes, self.test_schemes = schemes[0:170], schemes[171:210], schemes[221:270]
+        self.train_set.feature_sets = [(features(schema), schema.get_type()) for schema in self.train_schemes]
+        self.dev_set.feature_sets = [(features(schema), schema.get_type()) for schema in self.dev_schemes]
+        self.test_set.feature_sets = [(features(schema), schema.get_type()) for schema in self.test_schemes]
 
-        # Creating the train and test sets and training the classifier: 273 * 0.632 = 172
-        self.train_set, self.dev_set, self.test_set = feature_sets[0:170], feature_sets[171:210], feature_sets[221:270]
-        # self.train_set, self.dev_set, self.test_set = feature_sets[0:63], feature_sets[63:75], feature_sets[75:100]
-        print("Feature sets created - Start of the training")
+        # Training the classifier
         self.classifier = self.classifiers[classifier_type].train(self.train_set)
+
+        # Testing the classifier accuracy
         self.accuracy = nltk.classify.accuracy(self.classifier, self.test_set)
         print("Accuracy of answers: {} %".format(self.accuracy * 100))
+
+        # Generating the classifier's errors list
+        self.errors = []
+        for (schema, tag) in self.dev_schemes:
+            guess = self.classifier.classify(features(schema))
+            if guess != tag:
+                self.errors.append((tag, guess, schema))
 
     def get_classifier(self):
         return self.classifier
@@ -114,20 +124,30 @@ class DirectCausalEventClassifier:
     def get_classifier_type(self):
         return self.classifier_type
 
-    def get_accuracy(self):
-        return self.accuracy * 100
-
     def answer(self, schema):
         return self.classifier.classify(features(schema))
+
+    # Get classifier's accuracy properties
+
+    def get_accuracy(self):
+        return self.accuracy * 100
 
     def information(self, nb):
         return self.classifier.show_most_informative_features(nb)
 
-    def save_classifier(self, name):
-        Serializer.save(self.classifier, name)
+    def get_errors(self):
+        return self.errors
 
-    def get_confusing_matrix(self):
+    def create_confusion_matrix(self):
         ref = [schema.get_typet() for schema in parse_xml()]
         test = [self.answer(schema) for schema in parse_xml()]
-        cm = nltk.ConfusionMatrix(ref, test)
-        print(cm.pretty_format(sort_by_count=True, show_percents=True, truncate=9))
+        self.cm = nltk.ConfusionMatrix(ref, test)
+        print(self.cm.pretty_format(sort_by_count=True, show_percents=True, truncate=9))
+
+    def get_confusion_matrix(self):
+        return self.cm
+
+    # Saving the classifier
+
+    def save_classifier(self, name):
+        Serializer.save(self, name)

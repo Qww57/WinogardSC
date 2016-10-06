@@ -1,32 +1,48 @@
-from googleapiclient.discovery import build
+from apiclient.discovery import build
 from bs4 import BeautifulSoup
-from winosolver.nlptools import Tokenizer
-import pprint
+import api_keys
 import os
 import nltk.data
 import urllib.request
-import unittest
 
 
 class GoogleSearch:
 
-    # Developer API key
-    api_key = "AIzaSyBrOcNKaPDyLouNwtP_Z-VUymYAlde6VI8"
+    def __init__(self):
+        # Developer API key
+        self.api_key = api_keys.google_custom_search_key
 
-    # ID of the search engine
-    cse_id = "016483961005489098817:-9elerlp7mu"
+        # ID of the search engine
+        self.cse_id = api_keys.google_custom_search_id
 
-    # Web pages results from Google Search Engine
-    gse_results = []
+        # Web pages results from Google Search Engine
+        self.gse_results = []
 
-    # Terms that should be in the sentences
-    search_terms = []
+        # Terms that should be in the sentences
+        self.search_terms = []
 
-    # Request should look like: request="mouse * cat"
-    request = ""
+        # Request should look like: request="mouse * cat"
+        self.request = ""
 
-    """ maybe not needed """
+    def google_search(self, request, **kwargs):
+        self.request = request
+        service = build("customsearch", "v1", developerKey=self.api_key)
+        res = service.cse().list(q=self.request,
+                                 cx=self.cse_id,
+                                 **kwargs).execute()
+        if res is None:
+            self.gse_results = []
+        else:
+            # pprint.pprint(res)
+            self.gse_results = res['items']
+        return self.gse_results
+
     def concatenate(self, search_terms):
+        """
+        Maybe not needed
+        :param search_terms:
+        :return:
+        """
         if len(search_terms) is 1:
             self.request = search_terms[0]
         else:
@@ -37,79 +53,48 @@ class GoogleSearch:
             self.request = concat
         return self.request
 
-    def google_search(self, request, search_terms, **kwargs):
-        self.search_terms = search_terms
-        self.request = request # TODO maybe generate a list of request with OR in between
-        service = build("customsearch", "v1", developerKey=self.api_key)
-        res = service.cse().list(q=self.request, cx=self.cse_id, **kwargs).execute()
-        if res is None:
-            self.gse_results = []
-        else:
-            self.gse_results = res['items']
-        return self.gse_results
-
+    """
     def display_pages(self, search_term):
         if self.gse_results is []:
             self.gse_results = self.google_search(search_term)
         for result in self.gse_results:
             pprint.pprint(result)
+    """
 
     tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
-    def tokenize(self, gse_result):
-        """
-
-        :param gse_result:
-        :return:
-        """
-
-        # Converting the HTML text to String
+    def tokenize_gse_result(self, gse_result):
+        # FIXME
         url = gse_result[u'link']
         print(url)
-        f = urllib.request.urlopen(url)
-        mybytes = f.read()  # read bytes from url
-        f.close()
-        mystr = mybytes.decode("utf8")  # decodes bytes to string
+        try:
+            # Converting the HTML to bytes
+            f = urllib.request.urlopen(url)
+            mybytes = f.read()  # read bytes from url
+            f.close()
+            mystr = mybytes.decode("utf8")  # decodes bytes to string
 
-        # Deleting all the HTML characters
-        soup = BeautifulSoup(mystr, "html.parser")
-        raw_text = soup.get_text()
+            # Deleting all the HTML characters
+            soup = BeautifulSoup(mystr, "html.parser")
+            raw_text = soup.get_text()
 
-        # Deleting empty lines
-        raw_text = os.linesep.join([s for s in raw_text.splitlines() if s])
+            # Deleting empty lines
+            raw_text = os.linesep.join([s for s in raw_text.splitlines() if s])
 
-        # Tokenizing the text into sentences based on punctuation
-        sentences = self.tokenizer.tokenize(raw_text)
+            # Tokenizing the text into sentences based on punctuation
+            sentences = self.tokenizer.tokenize_gse_result(raw_text)
 
-        # Tokenizing the text into sentences based on layout
-        set = []
-        for sentence in sentences:
-            lines = sentence.splitlines()
-            for line in lines:
-                word_groups = line.split('\\s{2,}')
-                for group in word_groups:
-                    set.append(group)
-        return set
+            # Tokenizing the text into sentences based on layout
+            set = []
+            for sentence in sentences:
+                lines = sentence.splitlines()
+                for line in lines:
+                    word_groups = line.split('\\s{2,}')
+                    for group in word_groups:
+                        set.append(group)
+            return set
+        except Exception as e:
+            return []
 
     def generate_sentences(self, gse_results):
-        results = []
-
-        # For each page in the results
-        for result in gse_results:
-            set = self.tokenize(result)
-
-            # Filtering the sentences by selecting the ones containing the search items
-            filtered = []
-            for sentence in set:
-                if Tokenizer.should_add(self.search_terms, sentence):
-                    results.append(sentence)
-
-            # Adding the sentences to the results.
-            results.extend(filtered)
-
-        return results
-
-    # def filter():
-        # TODO filter sentences which are interesting
-        # Should have at least 3 words
-        # Then should have at least a verb
+        return [self.tokenize_gse_result(result) for result in gse_results]

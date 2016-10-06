@@ -38,10 +38,11 @@ setup(
     ],
     
     install_requires=[
-        'bs4', # for google searches
-        'nltk', 'PyDictionary', 'treetaggerwrapper', # for natural language processing
-        'untangle', # for XML reading
-        'pymining', 'wikipedia', # for data mining from wikipedia articles
+        'bs4',  # for google searches
+        'nltk', 'PyDictionary', 'treetaggerwrapper',  # for natural language processing
+        'untangle',  # for XML reading
+        'apiclient',  # for Google Custom Search API
+        'pymining', 'wikipedia',  # for data mining from wikipedia articles
     ],
     
     package_data={},

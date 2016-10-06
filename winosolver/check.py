@@ -2,7 +2,7 @@ import warnings
 import os
 from winosolver.nlptools import Tokenizer, GrammaticalClassification
 from winosolver.schema import XMLParser
-from winosolver.dce.DirectCausalEventSolver import DirectCausalEventSolver
+from winosolver.dce.dce_solver import DirectCausalEventSolver
 
 warnings.filterwarnings("ignore")
 

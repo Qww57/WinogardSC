@@ -1,11 +1,8 @@
 import random
-
 import nltk
-
+import time
 from winosolver import Serializer
 from winosolver.nlptools.Chunker import Chunker, get_main_pos, pre_process_document
-from winosolver.nlptools.GrammaticalClassification import *
-from winosolver.schema.XMLParser import parse_xml, add_labels
 from winosolver.nlptools.structure_mining import *
 
 
@@ -25,6 +22,7 @@ def features(schema):
 
     # Main structure of the sentence after chucking: should reflect:
     # X (NP) action (VB) Y (NP) complements (?) link (IN) Z (NP) action (VB) complements (?)
+    # TODO as boolean: matches structure or not.
     feature_set['sentence'] = str([tag for (tag, words) in main_structure])
 
     # Full structure of the snippet
@@ -37,9 +35,7 @@ def features(schema):
     else:
         feature_set['snippet_verb'] = ""
 
-    # TODO not good enough here since Tree Tagger confuses preposition and conjunctions
-    # TODO and we want only conjunctions --> use of NLTK
-    # TODO can also be done using the chunker in some cases, less efficient maybe
+    # Criteria 2
     str_main_prop = nltk.word_tokenize(main_prop)
     link_set = [w.lemma for w in sentence if (w.postag == "IN" or w.postag == "RB") and w.word == str_main_prop[-1]]
     if link_set:
@@ -48,29 +44,9 @@ def features(schema):
         feature_set['logical_link'] = ""
 
     # TODO replace then by schema_type of conjunction (causal, concession, etc)
-
     # TODO add feature with case of the Y, COI or COD
 
     return feature_set
-
-
-import unittest
-
-
-class test_dce_classifier_features(unittest.TestCase):
-
-    def test_features(self):
-        schemas = parse_xml()
-        self.show_features(schemas[0])
-        self.show_features(schemas[1])
-        self.show_features(schemas[42])
-        self.show_features(schemas[43])
-
-    def show_features(self, schema):
-        print(schema.sentence)
-        feature_set = features(schema)
-        for feature_name in feature_set:
-            print(feature_name + " -> " + feature_set[feature_name])
 
 
 class DirectCausalEventClassifier:
@@ -84,14 +60,17 @@ class DirectCausalEventClassifier:
         'decision_tree' : nltk.DecisionTreeClassifier
     }
 
-    def __init__(self, classifier_type):
+    def __init__(self, classifier_type, set_length=None):
         """
-
+        Default value of set_length is -1.
         :param classifier_type: schema_type of classifier chosen
+        :param set_length: number of schemas used in order to train and test the classifier
         """
         self.accuracy = 0
         self.cm = "not defined"
         self.classifier_type = classifier_type
+
+        debut = time.time()
 
         # Creation of the feature set
         schemes = parse_xml()
@@ -99,13 +78,21 @@ class DirectCausalEventClassifier:
         random.shuffle(schemes)
 
         # Creating the train, dev and test sets: 273 * 0.632 = 172
-        self.train_schemes, self.dev_schemes, self.test_schemes = schemes[0:170], schemes[171:210], schemes[221:270]
-        self.train_set.feature_sets = [(features(schema), schema.get_type()) for schema in self.train_schemes]
-        self.dev_set.feature_sets = [(features(schema), schema.get_type()) for schema in self.dev_schemes]
-        self.test_set.feature_sets = [(features(schema), schema.get_type()) for schema in self.test_schemes]
+        length = len(schemes) if set_length is None else set_length
+        print(length)
+        train_length = int(length * 0.632)  # 172
+        dev_length = int(length * 0.77)  # 207
+        self.train_schemes = schemes[0:train_length]
+        self.dev_schemes = schemes[(train_length + 1):dev_length]
+        self.test_schemes = schemes[(dev_length + 1):270]
+        self.train_set = [(features(schema), schema.get_type()) for schema in self.train_schemes]
+        self.dev_set = [(features(schema), schema.get_type()) for schema in self.dev_schemes]
+        self.test_set = [(features(schema), schema.get_type()) for schema in self.test_schemes]
+        print("Feature set created - " + str(time.time() - debut))
 
         # Training the classifier
         self.classifier = self.classifiers[classifier_type].train(self.train_set)
+        print("Classifier trained - " + str(time.time() - debut))
 
         # Testing the classifier accuracy
         self.accuracy = nltk.classify.accuracy(self.classifier, self.test_set)
@@ -113,10 +100,11 @@ class DirectCausalEventClassifier:
 
         # Generating the classifier's errors list
         self.errors = []
-        for (schema, tag) in self.dev_schemes:
+        for (schema, tag) in self.dev_set:
             guess = self.classifier.classify(features(schema))
             if guess != tag:
                 self.errors.append((tag, guess, schema))
+        print("Error set created - " + str(time.time() - debut))
 
     def get_classifier(self):
         return self.classifier
@@ -139,7 +127,7 @@ class DirectCausalEventClassifier:
         return self.errors
 
     def create_confusion_matrix(self):
-        ref = [schema.get_typet() for schema in parse_xml()]
+        ref = [schema.get_type() for schema in parse_xml()]
         test = [self.answer(schema) for schema in parse_xml()]
         self.cm = nltk.ConfusionMatrix(ref, test)
         print(self.cm.pretty_format(sort_by_count=True, show_percents=True, truncate=9))

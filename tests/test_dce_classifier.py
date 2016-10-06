@@ -1,4 +1,4 @@
-from winosolver.dce.DirectCausalEventClassifier import DirectCausalEventClassifier
+from winosolver.dce.dce_classifier import DirectCausalEventClassifier
 from winosolver.schema.XMLParser import parse_xml
 import time
 import unittest
@@ -9,7 +9,7 @@ class TestDirectCausalEventClassifier(unittest.TestCase):
     def test_naive_bayes(self):
 
         debut = time.time()
-        c = DirectCausalEventClassifier("naive_bayes")
+        c = DirectCausalEventClassifier("naive_bayes", 5)
         print(str(int((time.time() - debut) / 60) + 1) + " minutes to generate the naive bayes.")
 
         # If interesting results, saving it
@@ -28,6 +28,10 @@ class TestDirectCausalEventClassifier(unittest.TestCase):
         print("Not DCE? - " + c.answer(parse_xml()[95]))
         print("Not DCE? - " + c.answer(parse_xml()[159]))
 
-        c.information(10)
+        for error in c.get_errors():
+            print(error)
 
-        c.get_confusing_matrix()
+        c.create_confusion_matrix()
+        c.get_confusion_matrix()
+
+        c.information(4)

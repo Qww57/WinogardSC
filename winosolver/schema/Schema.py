@@ -18,8 +18,10 @@ class Schema:
         self.answer_B = prop2
         if 'A' in answer:
             self.correct = prop1
-        else:
+        elif 'B' in answer:
             self.correct = prop2
+        else:
+            self.correct = "unknown"
         self.source = source
         self.schema_type = "unknown"
 

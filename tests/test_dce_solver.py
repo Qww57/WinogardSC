@@ -1,4 +1,4 @@
-from winosolver.dce.DirectCausalEventSolver import DirectCausalEventSolver
+from winosolver.dce.dce_solver import DirectCausalEventSolver
 import unittest
 
 

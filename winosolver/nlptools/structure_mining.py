@@ -1,9 +1,18 @@
+from nltk import wordpunct_tokenize
 from pymining import itemmining
 from winosolver.schema.XMLParser import parse_xml, add_labels
 from winosolver.nlptools.GrammaticalClassification import analyze
 
 
-def find_patterns():
+# TODO unit tests
+
+
+def find_patterns(schema_type):
+    """
+    Function not called in the code. Used to think about how to solve the problem by finding patterns on
+    DCE elements.
+    :return:
+    """
     # Creating the schema input list
     schema_set = parse_xml()
     add_labels(schema_set)
@@ -13,29 +22,19 @@ def find_patterns():
     sentences = []
     snippets = []
     for schema in schema_set:
-        if schema.get_type() is "DCE":
+        if schema.get_type() is schema_type:
             sentences.append(analyze(schema.sentence).get_tag_sequence())
             snippets.append(analyze(schema.snippet).get_tag_sequence())
     print(str(len(snippets)) + " snippets to analyze founds")
 
-    # Analyze of all the snippets
-
-    # Analyze of the snippets for "DCE"
+    # Analyze of the collected snippets
     relim_input = itemmining.get_relim_input(tuple(snippets))
-    support = int(len(snippets) / 5) + 1
+    support = int(len(snippets) / 4) + 1
     report = itemmining.relim(relim_input, min_support=support)
     results = [rep for rep in report if len(rep) > 2]
     print(str(len(results)) + " frequent structure sets with min support of " + str(support))
 
     return results
-
-"""
-patterns = find_patterns()
-for pattern in patterns:
-    print(pattern)
-"""
-
-from nltk import wordpunct_tokenize
 
 
 def get_main_prop(schema):
@@ -45,7 +44,6 @@ def get_main_prop(schema):
     :param schema:
     :return:
     """
-    # TODO unit tests
 
     # Tokenizing and reverting the token sequences
     sentence = wordpunct_tokenize(schema.sentence)
@@ -75,12 +73,13 @@ def get_main_prop(schema):
     return sentence_str
 
 
-def get_link(schema):
-    sentence = wordpunct_tokenize(get_main_prop(schema))
-    # TODO check with Gramm that it's "IN"
-    return sentence[-1]
+# TODO rewrite as unit tests
 
 """
+patterns = find_patterns()
+for pattern in patterns:
+    print(pattern)
+
 schemas = parse_xml()
 print(get_main_prop(schemas[0]))
 print(get_main_prop(schemas[1]))

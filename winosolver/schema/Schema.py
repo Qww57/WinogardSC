@@ -35,14 +35,22 @@ class Schema:
         valid = (isinstance(self.ID, int) and isinstance(self.schema_type, str) and
                  isinstance(self.answer_A, str) and isinstance(self.answer_B, str) and
                  isinstance(self.sentence, str) and isinstance(self.snippet, str) and
-                 isinstance(self.pronoun, str) and isinstance(self.correct, str))
+                 isinstance(self.pronoun, str) and isinstance(self.correct, str) and
+
+                 self.schema_type and self.answer_A and self.answer_B and self.snippet and
+                 self.sentence and self.sentence and self.ID is not None)
+
         return valid
 
     def print(self):
         print("----- Winograd Schema number " + str(self.ID) + " -----")
         print("Text: {}".format(self.sentence))
         print("Snippet: {}".format(self.snippet))
+        print("Pronoun: {}".format(self.pronoun))
         print("Choices for '" + self.pronoun + "': A) " + self.answer_A + ",  or B) " + self.answer_B)
         print("Answer: " + self.correct)
         print("Source: " + self.source)
         print("")
+
+    def __str__(self):
+        return self.ID + ':' + self.sentence + ' - ' + self.pronoun + ' - ' + self.answer_A + ' or ' + self.answer_B

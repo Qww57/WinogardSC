@@ -23,7 +23,7 @@ debut = time.time()
 # Creating a huge wikipedia data base
 database = WikipediaDatabase("WordListDB")
 print(len(database.get_all_articles()))
-for i in range(135, 150, 1):  # done until 135, max is 236 000 / 1000 = 230
+for i in range(146, 160, 1):  # done until 146, max is 236 000 / 1000 = 230
     minIndex, maxIndex = i * 1000, i * 1000 + 30
     database.add_new_articles(minIndex, maxIndex) # done until 800
 

@@ -11,22 +11,20 @@ def main():
     os.system("cls")
 
     # Getting the user's input
-    print("---- Enter schema to solve ----")
-    # sentence = input("Enter the full sentence of the schema:")
-    sentence = "Metz football team defeated the one from Paris because it was better."
-    print("Sentence: " + sentence)
-    # snippet = input ("Enter the snippet:")
-    snippet = "it was better"
-    print("Snippet: " + snippet)
-    #pronoun = input("Enter the ambiguous pronoun:")
-    pronoun = "it"
-    print("Pronoun : " + pronoun)
-    # answer_a = input("Enter answer A:")
-    answer_a = "Metz football team"
-    print("Answer A: " + answer_a)
-    # answer_b = input("Enter answer B:")
-    answer_b = "the one from Paris"
-    print("Answer B: " + answer_b)
+    pre_loaded = input("Run preloaded example? (y/n)")
+    if pre_loaded is 'y' or pre_loaded is 'Y':
+        sentence = "Metz football team defeated the one from Paris because it was better."
+        snippet = "it was better"
+        pronoun = "it"
+        answer_a = "Metz football team"
+        answer_b = "the one from Paris"
+    else:
+        print("---- Enter schema to solve ----")
+        sentence = input("Enter the full sentence of the schema:")
+        snippet = input("Enter the snippet:")
+        pronoun = input("Enter the ambiguous pronoun:")
+        answer_a = input("Enter answer A:")
+        answer_b = input("Enter answer B:")
 
     current = Schema(
         ID=-1,
@@ -44,15 +42,16 @@ def main():
 
     # Process of resolving one schema
     print("---- CLASSIFYING THE SCHEMA ----")
-    dce_classifier = load("..\\tests\\naive_bayes_84_10-06-16")
+    dce_classifier = load("..\\tests\\naive_bayes_77_10-07-16")
     isinstance(dce_classifier, DirectCausalEventClassifier)
     print(dce_classifier.get_accuracy())
-    dce_classifier.create_confusion_matrix()
-    print(dce_classifier.get_confusion_matrix())
+    guess = dce_classifier.answer(current)
+    current.set_type(guess)
+    print("Sentence has been classified as " + guess)
 
     print(" ")
-    print("---- SOLVING THE SCHEMA ----")
-    print("TODO")
+    print("---- ANSWERING THE SCHEMA ----")
+    print("...WILL COME SOON...")
     print(" ")
 
     os.system("pause")

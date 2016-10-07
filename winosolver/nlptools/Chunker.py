@@ -91,7 +91,16 @@ class TestChunker(unittest.TestCase):
         sentence = pre_process_sentence(sentence)
         result = chunker.parse(sentence)
         print(str(get_main_pos(result)))
+        full_structure = chunker.parse(sentence)
+        main_structure = get_main_pos(full_structure)
+        print([tag for (tag, words) in main_structure])
 
         sentence = schemas[0].sentence
         result = chunker.parse(sentence)
         print(str(get_main_pos(result)))
+
+
+    def basic_structur(self):
+        ex = ['NP, VBD', 'NP', 'IN', 'NP', 'VBD']
+        basic = ['X', 'A1', 'Y', 'link', 'Z', 'A2']
+

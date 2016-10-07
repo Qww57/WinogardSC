@@ -1,10 +1,10 @@
 import random
-import nltk
 import time
 from winosolver import Serializer
-from winosolver.nlptools.Chunker import Chunker, get_main_pos, pre_process_document
-from winosolver.nlptools.structure_mining import *
-
+from winosolver.nlptools.Chunker import *
+from winosolver.dce.features_tools import get_main_prop, get_link
+from winosolver.nlptools.GrammaticalClassification import analyze
+from winosolver.schema.XMLParser import *
 
 chunker = Chunker()
 
@@ -36,12 +36,7 @@ def features(schema):
             feature_set['snippet_verb'] = ""
 
         # Criteria 2
-        str_main_prop = nltk.word_tokenize(main_prop)
-        link_set = [w.lemma for w in sentence if (w.postag == "IN" or w.postag == "RB") and w.word == str_main_prop[-1]]
-        if link_set:
-            feature_set['logical_link'] = link_set[0]
-        else:
-            feature_set['logical_link'] = ""
+        feature_set['logical_link'] = get_link(schema)
 
         # TODO replace then by schema_type of conjunction (causal, concession, etc)
         # TODO add feature with case of the Y, COI or COD
@@ -85,15 +80,13 @@ class DirectCausalEventClassifier:
         # Creating the train, dev and test sets: 273 * 0.632 = 172
         length = len(schemes) if set_length is None else set_length
         train_length = int(length * 0.632)  # 172
-        dev_length = int(length * 0.77)  # 207
 
         # DCE frequency in corpus is around 0.19
         dce_percentage = 0
         while dce_percentage < 0.15:
             random.shuffle(schemes)
             self.train_schemes = schemes[0:train_length]
-            self.dev_schemes = schemes[(train_length + 1):dev_length]
-            self.test_schemes = schemes[(dev_length + 1):length]
+            self.test_schemes = schemes[(train_length + 1):length]
             count = 0;
             for schema in self.train_schemes:
                 count = count + 1 if schema.get_type() is "DCE" else count
@@ -102,7 +95,6 @@ class DirectCausalEventClassifier:
         print("Train set with " + str(dce_percentage * length) + " DCE schema.")
 
         self.train_set = [(features(schema), schema.get_type()) for schema in self.train_schemes]
-        self.dev_set = [(features(schema), schema.get_type()) for schema in self.dev_schemes]
         self.test_set = [(features(schema), schema.get_type()) for schema in self.test_schemes]
         print("Feature set created in " + str(int((time.time() - debut) / 60) + 1) + " minute(s).")
         debut = time.time()
@@ -116,15 +108,6 @@ class DirectCausalEventClassifier:
         self.accuracy = nltk.classify.accuracy(self.classifier, self.test_set)
         print("Accuracy of answers: {} %".format(self.accuracy * 100))
         print("Accuracy computed in " + str(int((time.time() - debut) / 60) + 1) + " minute(s).")
-        debut = time.time()
-
-        # Generating the classifier's errors list
-        self.errors = []
-        for (f, tag) in self.dev_set:
-            guess = self.classifier.classify(f)
-            if guess != tag:
-                self.errors.append((tag, guess, schema))
-        print("Error set created in " + str(int((time.time() - debut) / 60) + 1) + " minute(s).")
         debut = time.time()
 
         # Creating the confusion matrix
@@ -152,10 +135,10 @@ class DirectCausalEventClassifier:
         return self.accuracy * 100
 
     def information(self, nb):
-        return self.classifier.show_most_informative_features(nb)
-
-    def get_errors(self):
-        return self.errors
+        if self.get_classifier_type() is 'naive_bayes':
+            return self.classifier.show_most_informative_features(nb)
+        if self.get_classifier_type() is 'decision_tree':
+            return self.classifier.pseudocode(depth=nb)
 
     def create_confusion_matrix(self):
         ref = [schema.get_type() for schema in parse_xml()]

@@ -42,12 +42,22 @@ def main():
 
     # Process of resolving one schema
     print("---- CLASSIFYING THE SCHEMA ----")
-    dce_classifier = load("..\\tests\\naive_bayes_77_10-07-16")
-    isinstance(dce_classifier, DirectCausalEventClassifier)
-    print(dce_classifier.get_accuracy())
-    guess = dce_classifier.answer(current)
+    dce_bayes_classifier = load("..\\data\\naive_bayes_77_10-07-16")
+    isinstance(dce_bayes_classifier, DirectCausalEventClassifier)
+    print(dce_bayes_classifier.get_accuracy())
+    print(dce_bayes_classifier.information(10))  # FIXME with if None
+    guess = dce_bayes_classifier.answer(current)
     current.set_type(guess)
     print("Sentence has been classified as " + guess)
+
+    """
+    dce_tree_classifier = load("..\\data\\decision_tree_77_10-07-16")
+    isinstance(dce_tree_classifier, DirectCausalEventClassifier)
+    print(dce_tree_classifier.get_accuracy())
+    print(dce_tree_classifier.information(4))
+    guess = dce_tree_classifier.answer(current)
+    print("Sentence has been classified as " + guess)
+    """
 
     print(" ")
     print("---- ANSWERING THE SCHEMA ----")

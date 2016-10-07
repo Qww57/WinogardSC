@@ -16,6 +16,7 @@ class Chunker(nltk.ChunkParserI):
         Based on from UnigramChunker from NLTK book, chapter 7
         :param train_sents:
         """
+        # TODO change the chunk types
         self.test_sents = conll2000.chunked_sents('test.txt', chunk_types=['NP'])
         train_sents = conll2000.chunked_sents('train.txt', chunk_types=['NP'])
         train_data = [[(t,c) for w,t,c in nltk.chunk.tree2conlltags(sent)]
@@ -72,35 +73,3 @@ def get_words(parent):
         else:
             words += node[0] + " "
     return words
-
-
-from winosolver.schema.XMLParser import parse_xml
-import unittest
-
-
-class TestChunker(unittest.TestCase):
-
-    def test_example(self):
-        # Running the chunker on a corpus
-        chunker = Chunker()
-        print()
-
-        # Loading and chunking a sentence
-        schemas = parse_xml()
-        sentence = schemas[0].sentence
-        sentence = pre_process_sentence(sentence)
-        result = chunker.parse(sentence)
-        print(str(get_main_pos(result)))
-        full_structure = chunker.parse(sentence)
-        main_structure = get_main_pos(full_structure)
-        print([tag for (tag, words) in main_structure])
-
-        sentence = schemas[0].sentence
-        result = chunker.parse(sentence)
-        print(str(get_main_pos(result)))
-
-
-    def basic_structur(self):
-        ex = ['NP, VBD', 'NP', 'IN', 'NP', 'VBD']
-        basic = ['X', 'A1', 'Y', 'link', 'Z', 'A2']
-

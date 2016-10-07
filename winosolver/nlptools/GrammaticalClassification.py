@@ -28,6 +28,16 @@ class TreeTaggerList:
         self.index += 1
         return result
 
+    def __getitem__(self, i):
+        try:
+            result = self.tree_word_list[i]
+        except IndexError:
+            print(IndexError)
+        return result
+
+    # def __setitem__
+    # def __delitem__
+
     def __len__(self):
         return len(self.tree_word_list)
 
@@ -45,13 +55,9 @@ class TreeTaggerList:
 class TreeTaggerWord:
     def __init__(self, triplet):
         self.word, self.postag, self.lemma = triplet
-        self.nltk_tag = "" #from NLTK
 
     def to_string(self):
-        return "[" + self.word + ", " + self.postag + ", " + self.nltk_tag + ", " + self.lemma + "]"
-
-    def set_nltk_tag(self, tag):
-        self.nltk_tag = tag
+        return "[" + self.word + ", " + self.postag + ", " + self.lemma + "]"
 
     def print(self):
         print(self.to_string())

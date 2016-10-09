@@ -46,7 +46,6 @@ class Schema:
         print("----- Winograd Schema number " + str(self.ID) + " -----")
         print("Text: {}".format(self.sentence))
         print("Snippet: {}".format(self.snippet))
-        print("Pronoun: {}".format(self.pronoun))
         print("Choices for '" + self.pronoun + "': A) " + self.answer_A + ",  or B) " + self.answer_B)
         print("Answer: " + self.correct)
         print("Source: " + self.source)

@@ -8,7 +8,7 @@ class TestDirectCausalEventClassifier(unittest.TestCase):
     def test_naive_bayes(self):
 
         debut = time.time()
-        c = DirectCausalEventClassifier("decision_tree", 100)
+        c = DirectCausalEventClassifier("naive_bayes")
         print(str(int((time.time() - debut) / 60) + 1) + " minutes to generate the naive bayes.")
 
         # If interesting results, classifier is saved

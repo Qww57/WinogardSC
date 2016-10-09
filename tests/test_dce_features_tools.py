@@ -5,6 +5,8 @@ import unittest
 
 class TestFeaturesTools(unittest.TestCase):
 
+    schemas = parse_xml()
+
     def test_similarity(self):
         # Test of two times the same word
         sim_1 = similarity("score", "score")
@@ -47,7 +49,17 @@ class TestFeaturesTools(unittest.TestCase):
         # self.assertTrue("silence" in self.s.antonym('repeat')) # Schema 10 - doesn't work here
 
     def test_get_main_prop(self):
-        schemas = parse_xml()
-        print(get_main_prop(schemas[0]))
-        print(get_main_prop(schemas[1]))
-        print(get_main_prop(schemas[2]))
+        print(get_main_prop(self.schemas[0]))
+        print(get_main_prop(self.schemas[1]))
+        print(get_main_prop(self.schemas[2]))
+        print(get_main_prop(self.schemas[3]))
+        print(get_main_prop(self.schemas[6]))
+        print(get_main_prop(self.schemas[7]))
+
+    def test_get_link(self):
+        self.assertEqual('because', get_link(self.schemas[0]))
+        self.assertEqual('because', get_link(self.schemas[1]))
+        self.assertEqual('because', get_link(self.schemas[2]))
+        self.assertEqual('because', get_link(self.schemas[3]))
+        self.assertEqual('but', get_link(self.schemas[6]))
+        self.assertEqual('but', get_link(self.schemas[7]))

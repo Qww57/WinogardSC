@@ -22,17 +22,19 @@ def antonym(word):
     :return: antonym set
     """
     result = []
-    for i in wn.synsets(word):
-        if i.pos() in ['a', 's']:
-            for j in i.lemmas():
-                if j.antonyms():
-                    result.append(j.antonyms()[0].name())
+    try:
+        for i in wn.synsets(word):
+            if i.pos() in ['a', 's']:
+                for j in i.lemmas():
+                    if j.antonyms():
+                        result.append(j.antonyms()[0].name())
 
-    result = list(set(result))
-    if len(result) is 0 and dictionary.antonym(word):
-        result.extend(dictionary.antonym(word))
-
-    return result
+        result = list(set(result))
+        if len(result) is 0 and dictionary.antonym(word):
+            result.extend(dictionary.antonym(word))
+        return result
+    except Exception as e:
+        return result
 
 
 def similarity(word1, word2):
@@ -59,8 +61,6 @@ def similarity(word1, word2):
     return float(sim(word1, word2) + sim(word2, word1)) / 2
 
 
-# TODO unit tests
-
 from winosolver.nlptools.GrammaticalClassification import analyze
 
 
@@ -68,18 +68,20 @@ def get_trait(schema):
     snippet = schema.snippet
     tokens = analyze(snippet)
 
-    # If verb is "be" then return the next JJ.
-    # Tree tagger is better
     for i in range(0, len(tokens), 1):
-        if tokens[i].postag == "VVD":
+        if "VV" in tokens[i].postag:
             return tokens[i].lemma
         else:
             # Verb be
-            if tokens[i].postag == "VBD":
-                if tokens[i].postag == "VVG":  # verb in be+ING
-                    return tokens[i].lemma
+            if "VB" in tokens[i].postag or "VH" in tokens[i].postag:
+                if tokens[i + 1].postag == "VVG":  # verb in be+ING
+                    return tokens[i + 1].lemma
+                if tokens[i + 1].postag == "RBR":  # if comparative
+                    return tokens[i + 1].lemma
+                if tokens[i + 1].postag == "RBS":  # if superlative
+                    return tokens[i + 1].lemma
                 for j in range(i, len(tokens), 1):
-                    if tokens[j].postag == "JJ":
+                    if tokens[j].postag in ["JJ", "JJS", "JJR"]:
                         return tokens[j].lemma
                     if tokens[j].postag == "NN":
                         return tokens[j].lemma
@@ -87,20 +89,29 @@ def get_trait(schema):
 
 def get_action(schema):
     main_prop = get_main_prop(schema)
-    tokens = analyze(main_prop)
+    return get_main_element(main_prop)
+
+
+def get_main_element(sentence):
 
     # If verb is "be" then return the next JJ.
     # Tree tagger is better
+    tokens = analyze(sentence)
+
     for i in range(0, len(tokens), 1):
-        if tokens[i].postag == "VVD":
+        if "VV" in tokens[i].postag:
             return tokens[i].lemma
         else:
             # Verb be
-            if tokens[i].postag == "VBD":
-                if tokens[j].postag == "VVG":  # verb in be+ING
-                    return tokens[j].lemma
+            if "VB" in tokens[i].postag or "VH" in tokens[i].postag:
+                if tokens[i + 1].postag == "VVG":  # verb in be+ING
+                    return tokens[i + 1].lemma
+                if tokens[i + 1].postag == "RBR":  # if comparative
+                    return tokens[i + 1].lemma
+                if tokens[i + 1].postag == "RBS":  # if superlative
+                    return tokens[i + 1].lemma
                 for j in range(i, len(tokens), 1):
-                    if tokens[j].postag == "JJ":
+                    if tokens[j].postag in ["JJ", "JJS", "JJR"]:
                         return tokens[j].lemma
                     if tokens[j].postag == "NN":
                         return tokens[j].lemma
@@ -156,15 +167,19 @@ def get_link(schema):
     main_prop = get_main_prop(schema)
     str_main_prop = nltk.word_tokenize(main_prop)
     sentence = analyze(schema.sentence)
-    link_set = [w.lemma for w in sentence if (w.postag == "IN" or w.postag == "RB") and w.word == str_main_prop[-1]]
+    link_set = [w.lemma for w in sentence if w.postag in ["IN", "RB", "CC", "RBS", "RBR"] and
+                w.word == str_main_prop[-1]]
     if link_set:
         return link_set[0]
     else:
         return ""
 
 
-causal_set = ['because', 'since']
-opposition_set = ['but', 'although']
+causal_set = ['because', 'since', 'an effect of', 'an outcome of', 'an upshot of', 'as a consequence of',
+              'as a result of', 'because', 'caused by', 'hence', 'stemmed from', 'still']
+
+opposition_set = ['but', 'although', 'despite', 'even though', 'however', 'nevertheless', 'otherwise', 'though',
+                  'alternatively', 'by contrast', 'whereas']
 
 
 def is_causal_relation(schema):

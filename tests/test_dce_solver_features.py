@@ -13,6 +13,8 @@ class TestDceSolverFeatures(unittest.TestCase):
     def test_features(self):
         schemas = parse_xml()
         self.show_features(schemas[0])
+        self.show_features(schemas[6])
+        self.show_features(schemas[7])
         self.show_features(schemas[43])
 
     @staticmethod

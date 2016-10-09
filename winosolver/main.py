@@ -2,7 +2,8 @@ import os
 import warnings
 from winosolver.Serializer import load
 from winosolver.schema.Schema import Schema
-from winosolver.dce.dce_classifier import DirectCausalEventClassifier
+from winosolver.dce.dce_bagging import DCEClassifierBagging
+from winosolver.dce.dce_solver import DirectCausalEventSolver, features
 
 warnings.filterwarnings("ignore")
 
@@ -11,13 +12,16 @@ def main():
     os.system("cls")
 
     # Getting the user's input
-    pre_loaded = input("Run preloaded example? (y/n)")
+    #pre_loaded = input("Run preloaded example? (y/n)")
+    pre_loaded = 'y'
     if pre_loaded is 'y' or pre_loaded is 'Y':
         sentence = "Metz football team defeated the one from Paris because it was better."
         snippet = "it was better"
         pronoun = "it"
         answer_a = "Metz football team"
         answer_b = "the one from Paris"
+        sentence_bis = "Metz football team defeated the one from Paris because it was bad."
+        snippet_bis = "it was bad"
     else:
         print("---- Enter schema to solve ----")
         sentence = input("Enter the full sentence of the schema:")
@@ -37,34 +41,53 @@ def main():
         source="console"
     )
 
+    opposite = Schema(
+        ID=-1,
+        sentence=sentence_bis,
+        snip=snippet_bis,
+        pron=pronoun,
+        prop1=answer_a,
+        prop2=answer_b,
+        answer="to be guessed",
+        source="console"
+    )
+
     print()
     current.print()
 
+    dce_classifier = DCEClassifierBagging()
+    dce_solver = DirectCausalEventSolver()
+
     # Process of resolving one schema
     print("---- CLASSIFYING THE SCHEMA ----")
-    dce_bayes_classifier = load("..\\data\\naive_bayes_77_10-07-16")
-    isinstance(dce_bayes_classifier, DirectCausalEventClassifier)
-    print(dce_bayes_classifier.get_accuracy())
-    print(dce_bayes_classifier.information(10))  # FIXME with if None
-    guess = dce_bayes_classifier.answer(current)
+    guess = dce_classifier.classify(current)
     current.set_type(guess)
     print("Sentence has been classified as " + guess)
+    print(" ")
 
-    """
-    dce_tree_classifier = load("..\\data\\decision_tree_77_10-07-16")
-    isinstance(dce_tree_classifier, DirectCausalEventClassifier)
-    print(dce_tree_classifier.get_accuracy())
-    print(dce_tree_classifier.information(4))
-    guess = dce_tree_classifier.answer(current)
+    print("---- ANSWERING THE SCHEMA ----")
+    # for feature_name in features(current):
+    #    print(feature_name + " -> " + str(features(opposite)[feature_name]))
+    answer = dce_solver.solve(current)
+    print("Answer: " + str(answer))
+    print("")
+
+    opposite.print()
+
+    # Process of resolving one schema
+    print("---- CLASSIFYING THE SCHEMA ----")
+    guess = dce_classifier.classify(opposite)
+    opposite.set_type(guess)
     print("Sentence has been classified as " + guess)
-    """
 
     print(" ")
     print("---- ANSWERING THE SCHEMA ----")
-    print("...WILL COME SOON...")
-    print(" ")
+    for feature_name in features(opposite):
+        print(feature_name + " -> " + str(features(opposite)[feature_name]))
+    answer = dce_solver.solve(opposite)
+    print("Answer: " + str(answer))
 
-    os.system("pause")
+    # os.system("pause")
 
 main()
 

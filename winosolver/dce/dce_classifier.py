@@ -77,22 +77,22 @@ class DirectCausalEventClassifier:
         schemes = parse_xml()
         add_labels(schemes)
 
-        # Creating the train, dev and test sets: 273 * 0.632 = 172
+        # Creating the train, dev and test sets
         length = len(schemes) if set_length is None else set_length
-        train_length = int(length * 0.632)  # 172
+        train_length = int(length * 0.5)
 
-        # DCE frequency in corpus is around 0.19
+        # DCE frequency in corpus is around 0.186
         dce_percentage = 0
-        while dce_percentage < 0.15:
+        while dce_percentage < 0.156 or dce_percentage > 0.216:
             random.shuffle(schemes)
             self.train_schemes = schemes[0:train_length]
             self.test_schemes = schemes[(train_length + 1):length]
-            count = 0;
+            count = 0
             for schema in self.train_schemes:
                 count = count + 1 if schema.get_type() is "DCE" else count
-            dce_percentage = count / length
+            dce_percentage = count / train_length
 
-        print("Train set with " + str(dce_percentage * length) + " DCE schema.")
+        print("Train set with " + str(dce_percentage * train_length) + " DCE schema. (" + str(dce_percentage) + ")")
 
         self.train_set = [(features(schema), schema.get_type()) for schema in self.train_schemes]
         self.test_set = [(features(schema), schema.get_type()) for schema in self.test_schemes]

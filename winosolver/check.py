@@ -1,14 +1,13 @@
-import warnings
-import os
+""" Script to be run in the console to check that the installation has been done properly. """
+
 from winosolver.nlptools import Tokenizer, GrammaticalClassification
 from winosolver.schema import XMLParser
 from winosolver.dce.dce_solver import DirectCausalEventSolver
+import warnings
+import os
+
 
 warnings.filterwarnings("ignore")
-
-"""
-Script to be run in the console to check that the installation has been done properly.
-"""
 
 
 def test():

@@ -1,5 +1,8 @@
+""" Script used in order to try to cluster the Winograd schemas"""
+
 from nltk import ngrams
 from winosolver.nlptools.Chunker import Chunker, pre_process_sentence, get_main_pos
+
 
 example = 'this is a foo bar sentences and i want to ngramize it'
 

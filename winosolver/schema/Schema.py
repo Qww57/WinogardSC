@@ -1,3 +1,5 @@
+""" Class defining a Winograd schema"""
+
 class Schema:
     def __init__(self, ID, sentence, snip, pron, prop1, prop2, answer, source):
         """

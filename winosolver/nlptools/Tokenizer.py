@@ -1,3 +1,5 @@
+""" Script defining a few basic function related to tokenizing"""
+
 from nltk.tokenize import wordpunct_tokenize, RegexpTokenizer
 import nltk
 

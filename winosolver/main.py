@@ -1,6 +1,7 @@
+""" Main class proposing a console interface for the resolution of winograd schema"""
+
 import os
 import warnings
-from winosolver.Serializer import load
 from winosolver.schema.Schema import Schema
 from winosolver.dce.dce_bagging import DCEClassifierBagging
 from winosolver.dce.dce_solver import DirectCausalEventSolver, features

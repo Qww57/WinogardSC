@@ -1,3 +1,5 @@
+""" Scripts used to chunk the sentences from the Winograd schema data set and find some patterns."""
+
 from pymining import itemmining
 from winosolver.schema.XMLParser import parse_xml, add_labels
 from winosolver.nlptools.GrammaticalClassification import analyze

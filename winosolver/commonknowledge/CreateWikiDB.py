@@ -1,7 +1,9 @@
-import warnings
+""" Script used to create a database made of wikipedia articles"""
+
+from winosolver.commonknowledge.WikipediaDatabase import WikipediaDatabase
 from nltk.corpus import words
 import time
-from winosolver.commonknowledge.WikipediaDatabase import WikipediaDatabase
+import warnings
 
 warnings.filterwarnings("ignore")
 

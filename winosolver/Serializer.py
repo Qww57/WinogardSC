@@ -1,3 +1,5 @@
+""" Class used in order to serialize and read objects as .pickle. """
+
 import pickle
 
 

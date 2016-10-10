@@ -1,3 +1,5 @@
+""" Class based on treetagger in order to tokenize and tag sentences and get the lemmas of their tokens. """
+
 import treetaggerwrapper
 
 
@@ -34,9 +36,6 @@ class TreeTaggerList:
         except IndexError:
             print(IndexError)
         return result
-
-    # def __setitem__
-    # def __delitem__
 
     def __len__(self):
         return len(self.tree_word_list)

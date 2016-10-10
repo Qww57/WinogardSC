@@ -1,3 +1,5 @@
+""" Implementation of supervised learning classifier to detect dce schema"""
+
 import random
 import time
 from winosolver import Serializer

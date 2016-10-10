@@ -1,3 +1,5 @@
+""" Test class focusing on the DCE solver. """
+
 from winosolver.dce.dce_solver import *
 from winosolver.schema.XMLParser import *
 import warnings

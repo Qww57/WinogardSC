@@ -1,8 +1,16 @@
+""" Script used to read schemas from XML file. """
+
 from winosolver.schema.Schema import Schema
 import os
 import untangle
 
+
 def parse_xml():
+    """
+    Read xml file.
+
+    :return: List of Winograd Schemas
+    """
 
     schemes = []
 
@@ -55,6 +63,12 @@ dce = [[0, 1], [6, 7], [8, 9], [10, 11], [14, 15], [22, 23], [28, 29], [30, 31],
 
 
 def add_labels(schemes):
+    """
+    Tag the schemas from manually created list of index.
+
+    :param schemes: schemes that should be tagged
+    :return: void functions
+    """
 
     for schema in schemes:
         for element in dce:

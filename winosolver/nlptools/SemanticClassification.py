@@ -1,9 +1,10 @@
-import unittest
 from nltk.corpus import wordnet as wn
 
 
 def semantic_field(word, similarity):
     """
+    Return semantic field of a word
+
     :param similarity: threshold to accept hypernyms as result
     :param word: should be in English
     :return: set of words related to the input word
@@ -100,13 +101,3 @@ for s in s3:
     print(s.definition())
     print(s.examples())
 """
-
-
-class TestSemanticalClassification(unittest.TestCase):
-
-    def test_example(self):
-        # Testing to get the semantic field of specific key words
-        council = semantic_field('councilman', 0.2)
-        demonst = semantic_field('demonstrator', 0.2)
-        print("Word: {} semantics: {}".format('councilman', council))
-        print("Word: {} semantics: {}".format('demonstrator', demonst))

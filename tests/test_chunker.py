@@ -24,3 +24,7 @@ class TestChunker(unittest.TestCase):
         sentence = schemas[0].sentence
         result = chunker.parse(sentence)
         print(str(get_main_pos(result)))
+
+        sentence = schemas[158].sentence
+        result = chunker.parse(sentence)
+        print(str(get_main_pos(result)))

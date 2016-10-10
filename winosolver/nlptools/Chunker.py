@@ -1,3 +1,5 @@
+""" Chunker class used to obtain the structure of schemas as a tree"""
+
 import nltk
 from nltk.corpus import conll2000
 
@@ -29,6 +31,7 @@ class Chunker(nltk.ChunkParserI):
     def parse(self, sentence):
         """
         Taken from UnigramChunker from NLTK book, chapter 7
+
         :param sentence: list of tuples of words with pages
         :return:
         """
@@ -43,6 +46,12 @@ class Chunker(nltk.ChunkParserI):
 
 
 def pre_process_document(document):
+    """
+    Pre processing of documents before chunking.
+
+    :param document: set of string sentences
+    :return: pre-processed set of set of tokens
+    """
     sentences = nltk.sent_tokenize(document)
     sentences = [nltk.word_tokenize(sent) for sent in sentences]
     sentences = [nltk.pos_tag(sent) for sent in sentences]
@@ -50,12 +59,31 @@ def pre_process_document(document):
 
 
 def pre_process_sentence(sentence):
+    """
+    Pre processing of sentence before chunking.
+
+    :param sentence: string sentences
+    :return: pre-processed set of tokens
+    """
     return nltk.pos_tag(nltk.word_tokenize(sentence))
 
 
-def get_main_pos(parent):
+def get_main_pos(tree):
+    """
+    Return the nodes with a depth of 1 which corresponds of the main structure of the sentence.
+
+    :param tree: tree obtained with the chunker
+    :return: main structure as set of tuples of tag and word.
+    """
+
+    def get_words(parent_node):
+        words = ""
+        for child_node in parent_node:
+            words += get_words(child_node) if type(child_node) is nltk.Tree else child_node[0] + " "
+        return words
+
     main_labels = []
-    for node in parent:
+    for node in tree:
         if type(node) is nltk.Tree:
             node_tuple = node.label(), get_words(node)
             main_labels.append(node_tuple)
@@ -64,12 +92,3 @@ def get_main_pos(parent):
             main_labels.append(node_tuple)
     return main_labels
 
-
-def get_words(parent):
-    words = ""
-    for node in parent:
-        if type(node) is nltk.Tree:
-            words += get_words(node)
-        else:
-            words += node[0] + " "
-    return words

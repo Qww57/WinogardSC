@@ -3,7 +3,6 @@ from winosolver.dce.features_tools import *
 
 def features(schema):
     feature_set = {}
-
     feature_set['causal_relation'] = is_causal_relation(schema)
     feature_set['opposition_relation'] = is_opposition_relation(schema)
 
@@ -24,42 +23,39 @@ def features(schema):
 
 class DirectCausalEventSolver:
 
-    # TODO: take the negation of the action into consideration
-    # TODO Improve the antonym selection
-
     @staticmethod
     def solve(schema):
         if schema.get_type() == "DCE":
+
             feature_set = features(schema)
+            for feature in feature_set:
+                print(str(feature) + " -> " + str(feature_set[feature]))
+            print("")
+
+            simi = feature_set['action_trait_similarity']
+            dissimi = feature_set['action_!trait_similarity']
+
             if feature_set['causal_relation']:
-                # If, couldn't get any words, so any information.
-                if feature_set['action_!trait_similarity'] is -1 and feature_set['action_trait_similarity'] is -1:
-                    return None
-                else:
-                    # if action and !trait are more related, then second element
-                    if feature_set['action_trait_similarity'] > 0:
-                        return schema.answer_A
+                # if action and !trait are more related, then second element
+                if simi > 0 and simi > dissimi:
+                    return schema.answer_A, ((simi - dissimi) / simi)
 
-                    # if action and !trait are more related, then first element
-                    if feature_set['action_!trait_similarity'] > 0:
-                        return schema.answer_B
+                # if action and !trait are more related, then first element
+                if dissimi > 0 and dissimi > simi:
+                    return schema.answer_B, ((dissimi - simi) / dissimi)
 
-                    return "unable to answer yet"
+                return "unable to answer yet"
 
-            elif feature_set['opposition_relation']:
-                # If, couldn't get any words, so any information.
-                if feature_set['action_!trait_similarity'] is -1 and feature_set['action_trait_similarity'] is -1:
-                    return None
-                else:
-                    # if action and !trait are more related, then second element
-                    if feature_set['action_trait_similarity'] > 0:
-                        return schema.answer_B
+            if feature_set['opposition_relation']:
+                # if action and !trait are more related, then second element
+                if simi > 0 and simi > dissimi:
+                    return schema.answer_B, ((simi - dissimi) / simi)
 
-                    # if action and !trait are more related, then first element
-                    if feature_set['action_!trait_similarity'] > 0:
-                        return schema.answer_A
+                # if action and !trait are more related, then first element
+                if dissimi > 0 and dissimi > simi:
+                    return schema.answer_A, ((dissimi - simi) / dissimi)
 
-                    return "unable to answer yet"
+                return "unable to answer yet"
             else:
                 print("Not enough information to resolve: " + schema.sentence)
                 return None

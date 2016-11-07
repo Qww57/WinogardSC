@@ -4,7 +4,7 @@ import random
 import time
 from winosolver import Serializer
 from winosolver.nlptools.Chunker import *
-from winosolver.dce.features_tools import get_main_prop, get_link
+from winosolver.dce.features_tools import get_main_prop, get_link, snippet_verb
 from winosolver.nlptools.GrammaticalClassification import analyze
 from winosolver.schema.XMLParser import *
 
@@ -15,8 +15,8 @@ def features(schema):
     feature_set = {}
     try:
         snippet = analyze(schema.snippet)
-        main_prop = get_main_prop(schema)
-        sentence = analyze(main_prop)
+        # main_prop = get_main_prop(schema)
+        # sentence = analyze(main_prop)
 
         # Creating a tree structure for the sentence
         full_structure = chunker.parse(schema.sentence)
@@ -31,11 +31,7 @@ def features(schema):
         feature_set['snippet'] = str(snippet.get_tag_sequence())
 
         # TODO categorize schema_type of verb like action or state
-        verb_set = [word.lemma for word in snippet if "V" in word.postag]
-        if verb_set:
-            feature_set['snippet_verb'] = verb_set[0]
-        else:
-            feature_set['snippet_verb'] = ""
+        feature_set['snippet_verb'] = snippet_verb(schema)
 
         # Criteria 2
         feature_set['logical_link'] = get_link(schema)

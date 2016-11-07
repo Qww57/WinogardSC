@@ -23,7 +23,7 @@ class TestDirectCausalEventClassifier(unittest.TestCase):
 
         print(" ")
         print("Analysis of the most important features")
-        c.information(4)
+        c.information(10)
 
         print(" ")
         print("Classify schema from test set")

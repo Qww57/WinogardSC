@@ -63,3 +63,29 @@ class TestFeaturesTools(unittest.TestCase):
         self.assertEqual('because', get_link(self.schemas[3]))
         self.assertEqual('but', get_link(self.schemas[6]))
         self.assertEqual('but', get_link(self.schemas[7]))
+
+    def test_get_snippet_verb(self):
+        self.assertEqual("fear", get_snippet_verb(self.schemas[0]))
+        self.assertEqual("advocate", get_snippet_verb(self.schemas[1]))
+        self.assertEqual("be", get_snippet_verb(self.schemas[2]))
+        self.assertEqual("be", get_snippet_verb(self.schemas[3]))
+        self.assertEqual("be", get_snippet_verb(self.schemas[6]))
+        self.assertEqual("be", get_snippet_verb(self.schemas[7]))
+
+    """
+    def test_snippet_state_verb(self):
+        self.assertTrue(is_state_verb(self.schemas[0]))
+        self.assertFalse(is_state_verb(self.schemas[1]))
+        self.assertTrue(is_state_verb(self.schemas[2]))
+        self.assertTrue(is_state_verb(self.schemas[3]))
+        self.assertTrue(is_state_verb(self.schemas[6]))
+        self.assertTrue(is_state_verb(self.schemas[7]))
+
+    def test_action_state_verb(self):
+        self.assertFalse(is_action_verb(self.schemas[0]))
+        self.assertTrue(is_action_verb(self.schemas[1]))
+        self.assertTrue(is_action_verb(self.schemas[2]))
+        self.assertTrue(is_action_verb(self.schemas[3]))
+        self.assertTrue(is_action_verb(self.schemas[6]))
+        self.assertTrue(is_action_verb(self.schemas[7]))
+    """

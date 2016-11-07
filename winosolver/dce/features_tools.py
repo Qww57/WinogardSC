@@ -188,3 +188,42 @@ def is_causal_relation(schema):
 
 def is_opposition_relation(schema):
     return True if get_link(schema) in opposition_set else False
+
+
+both_verbs = ['be', 'have', 'see', 'taste', 'smell', 'feel', 'look', 'think']
+
+# CAREFUL, SOME OF THEM CAN BE: MEASURE = BE LONG HERE, NOT MEASURING
+state_verbs = ['agree', 'appear', 'believe', 'belong', 'concern', 'consider', 'consist', 'contain', 'depend', 'deserve',
+               'disagree', 'dislike', 'doubt', 'feel', 'fit', 'forget', 'guess', 'hate', 'hear', 'imagine', 'impress',
+               'include', 'involve', 'know', 'like', 'love', 'matter', 'mean', 'measure', 'mind', 'mind', 'need', 'owe',
+               'own', 'prefer', 'promise', 'realise', 'recognise', 'remember', 'seem', 'sound', 'suppose', 'sound',
+               'weigh', 'wish', 'fear', 'satisfy', 'cost', 'equal', 'require']
+
+
+def get_snippet_verb(schema):
+    snippet = analyze(schema.snippet)
+    verb_set = [word.lemma for word in snippet if "V" in word.postag]
+    if verb_set:
+        return verb_set[0]
+    else:
+        return None
+
+
+def is_action_verb(v):
+    return False if v in state_verbs else True
+
+
+def is_state_verb(v):
+    return True if v in state_verbs or v in both_verbs else False
+
+
+def snippet_verb(schema):
+    verb = get_snippet_verb(schema)
+    if is_action_verb(verb) and is_state_verb(verb):
+        return "A-S"
+    if is_action_verb(verb):
+        return "A"
+    if is_state_verb(verb):
+        return "S"
+    return ""
+

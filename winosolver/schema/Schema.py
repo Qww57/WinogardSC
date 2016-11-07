@@ -54,4 +54,5 @@ class Schema:
         print("")
 
     def __str__(self):
-        return self.ID + ':' + self.sentence + ' - ' + self.pronoun + ' - ' + self.answer_A + ' or ' + self.answer_B
+        return str(self.ID) + ':' + str(self.sentence) + ' - ' + str(self.pronoun) + ' - ' + str(self.answer_A) \
+                + ' or ' + str(self.answer_B)

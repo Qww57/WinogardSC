@@ -19,7 +19,7 @@ setup(
         'py2exe': {
             'bundle_files': 2,
             'includes':['nltk',
-                        'commonknowledge', 'dce',
+                        'cknowledge', 'dce',
                         'schema', 'Model', 'nlptools']
             }
     },

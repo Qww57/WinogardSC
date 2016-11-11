@@ -91,6 +91,7 @@ def main():
     current.print()
 
     dce_classifier = DCEClassifierBagging()
+    dce_classifier.compute_efficiency()
     dce_solver = DirectCausalEventSolver()
 
     # Process of resolving one schema

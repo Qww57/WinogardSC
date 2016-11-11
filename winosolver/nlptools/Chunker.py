@@ -18,7 +18,7 @@ class Chunker(nltk.ChunkParserI):
         Based on from UnigramChunker from NLTK book, chapter 7
         :param train_sents:
         """
-        # TODO change the chunk types
+
         self.test_sents = conll2000.chunked_sents('test.txt', chunk_types=['NP'])
         train_sents = conll2000.chunked_sents('train.txt', chunk_types=['NP'])
         train_data = [[(t,c) for w,t,c in nltk.chunk.tree2conlltags(sent)]

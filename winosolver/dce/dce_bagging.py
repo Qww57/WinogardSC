@@ -10,9 +10,9 @@ dce_1 = load("..\\data\\naive_bayes_77_10-07-16")
 dce_2 = load("..\\data\\naive_bayes_75_10-09-16")
 dce_3 = load("..\\data\\naive_bayes_80_10-09-16")
 dce_4 = load("..\\data\\naive_bayes_85_10-08-16")
-dce_5 = load("..\\data\\naive_bayes_74_10-09-16")
+dce_5 = load("..\\data\\naive_bayes_81_11-11-16")
 
-classifiers = [dce_1, dce_2, dce_3, dce_4, dce_5]
+classifiers = [dce_5, dce_5]
 
 
 class DCEClassifierBagging:

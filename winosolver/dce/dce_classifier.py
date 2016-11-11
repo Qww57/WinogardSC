@@ -4,7 +4,7 @@ import random
 import time
 from winosolver import Serializer
 from winosolver.nlptools.Chunker import *
-from winosolver.dce.features_tools import get_main_prop, get_link, snippet_verb
+from winosolver.dce.features_tools import *
 from winosolver.nlptools.GrammaticalClassification import analyze
 from winosolver.schema.XMLParser import *
 
@@ -12,11 +12,14 @@ chunker = Chunker()
 
 
 def features(schema):
+    """
+    This function does not reflect exactly the features describes in the report.
+    :param schema:
+    :return:
+    """
     feature_set = {}
     try:
         snippet = analyze(schema.snippet)
-        # main_prop = get_main_prop(schema)
-        # sentence = analyze(main_prop)
 
         # Creating a tree structure for the sentence
         full_structure = chunker.parse(schema.sentence)
@@ -24,7 +27,6 @@ def features(schema):
 
         # Main structure of the sentence after chucking: should reflect:
         # X (NP) action (VB) Y (NP) complements (?) link (IN) Z (NP) action (VB) complements (?)
-        # TODO as boolean: matches structure or not.
         feature_set['sentence'] = str([tag for (tag, words) in main_structure])
 
         # Full structure of the snippet
@@ -36,8 +38,43 @@ def features(schema):
         # Criteria 2
         feature_set['logical_link'] = get_link(schema)
 
-        # TODO replace then by schema_type of conjunction (causal, concession, etc)
-        # TODO add feature with case of the Y, COI or COD
+    except Exception as e:
+        print("Error: " + str(e) + "for following schema ")
+        print(schema)
+        feature_set['logical_link'] = ''
+        feature_set['snippet_verb'] = ''
+        feature_set['sentence'] = ''
+        feature_set['snippet'] = ''
+    return feature_set
+
+
+def new_features(schema):
+    feature_set = {}
+    try:
+        snippet = analyze(schema.snippet)
+
+        # Creating a tree structure for the sentence
+        full_structure = chunker.parse(schema.sentence)
+        main_structure = get_main_pos(full_structure)
+
+        # R1: Main structure of the sentence after chucking: should reflect:
+        # X (NP) action (VB) Y (NP) complements (?) link (IN) Z (NP) action (VB) complements (?)
+        feature_set['sentence'] = is_dce_structure(schema)
+
+        # R2: Criteria 2
+        if is_causal_relation(schema):
+            feature_set['logical_link'] = "causal"
+        elif is_opposition_relation(schema):
+            feature_set['logical_link'] = "opposition"
+        else:
+            feature_set['logical_link'] = "other"
+
+        # Full structure of the snippet
+        feature_set['snippet'] = str(snippet.get_tag_sequence())
+
+        # TODO categorize schema_type of verb like action or state
+        feature_set['snippet_verb'] = snippet_verb(schema)
+
     except Exception as e:
         print("Error: " + str(e) + "for following schema ")
         print(schema)
@@ -92,8 +129,9 @@ class DirectCausalEventClassifier:
 
         print("Train set with " + str(dce_percentage * train_length) + " DCE schema. (" + str(dce_percentage) + ")")
 
-        self.train_set = [(features(schema), schema.get_type()) for schema in self.train_schemes]
-        self.test_set = [(features(schema), schema.get_type()) for schema in self.test_schemes]
+        # TODO change feature function name
+        self.train_set = [(new_features(schema), schema.get_type()) for schema in self.train_schemes]
+        self.test_set = [(new_features(schema), schema.get_type()) for schema in self.test_schemes]
         print("Feature set created in " + str(int((time.time() - debut) / 60) + 1) + " minute(s).")
         debut = time.time()
 

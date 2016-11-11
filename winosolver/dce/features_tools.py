@@ -3,6 +3,7 @@ from nltk.corpus import wordnet as wn
 from PyDictionary import PyDictionary
 from urllib.request import urlopen
 from winosolver.nlptools.Chunker import *
+from winosolver.nlptools.GrammaticalClassification import analyze
 import json
 
 
@@ -61,9 +62,6 @@ def similarity(word1, word2):
     return float(sim(word1, word2) + sim(word2, word1)) / 2
 
 
-from winosolver.nlptools.GrammaticalClassification import analyze
-
-
 def get_trait(schema):
     snippet = schema.snippet
     tokens = analyze(snippet)
@@ -93,7 +91,6 @@ def get_action(schema):
 
 
 def get_main_element(sentence):
-
     # If verb is "be" then return the next JJ.
     # Tree tagger is better
     tokens = analyze(sentence)
@@ -115,16 +112,6 @@ def get_main_element(sentence):
                         return tokens[j].lemma
                     if tokens[j].postag == "NN":
                         return tokens[j].lemma
-
-from winosolver.schema.XMLParser import *
-"""
-chunker = Chunker()
-schema_set = parse_xml()
-add_labels(schema_set)
-for schema in schema_set[0:50]:
-    if schema.get_type() is "DCE":
-        print(get_trait(schema))
-"""
 
 
 def get_main_prop(schema):
@@ -227,3 +214,37 @@ def snippet_verb(schema):
         return "S"
     return ""
 
+
+def is_dce_structure(schema):
+    # Basic structure of schema
+    structure = ["N", "V", "N", "IN", "N", "V"]
+
+    # Pre-processing
+    full_structure = Chunker().parse(schema.sentence)
+    main_structure = get_main_pos(full_structure)
+    tags = [tag for (tag, words) in main_structure]
+    tags = ["V" if "V" in tag else tag for tag in tags]
+    tags = ["N" if tag in ["NN", "NNS", "NP", "NPS"] else tag for tag in tags]
+
+    # Checking if the basic structure is contained in the schema
+    return is_sub_sequence(structure, tags)
+
+
+def is_sub_sequence(sub_seq, seq):
+    """ Recursive method used in order to define if a sub-sequence is contained inside a sequence."""
+    if len(sub_seq) == 0:
+        return True
+    if sub_seq[0] in seq:
+        index = seq.index(sub_seq[0])
+        if index + 1 < len(seq) or len(sub_seq) > 1:
+            return is_sub_sequence(sub_seq[1:], seq[index + 1:])
+        else:
+            return True
+    else:
+        return False
+
+"""
+from winosolver.schema.XMLParser import *
+schemes = parse_xml()
+print(is_dce_structure(schemes[0]))
+"""

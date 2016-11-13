@@ -208,9 +208,9 @@ def snippet_verb(schema):
     verb = get_snippet_verb(schema)
     if is_action_verb(verb) and is_state_verb(verb):
         return "A-S"
-    if is_action_verb(verb):
+    elif is_action_verb(verb):
         return "A"
-    if is_state_verb(verb):
+    elif is_state_verb(verb):
         return "S"
     return ""
 
@@ -243,8 +243,9 @@ def is_sub_sequence(sub_seq, seq):
     else:
         return False
 
-"""
+
 from winosolver.schema.XMLParser import *
 schemes = parse_xml()
-print(is_dce_structure(schemes[0]))
-"""
+# [print(schemes.index(schema), snippet_verb(schema)) for schema in schemes if "S" in snippet_verb(schema)]
+# print(is_state_verb(schemes[0]))
+

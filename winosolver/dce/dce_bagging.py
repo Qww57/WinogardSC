@@ -10,9 +10,9 @@ dce_1 = load("..\\data\\naive_bayes_77_10-07-16")
 dce_2 = load("..\\data\\naive_bayes_75_10-09-16")
 dce_3 = load("..\\data\\naive_bayes_80_10-09-16")
 dce_4 = load("..\\data\\naive_bayes_85_10-08-16")
-dce_5 = load("..\\data\\naive_bayes_81_11-11-16")
+dce_5 = load("..\\data\\naive_bayes_80_11-14-16")
 
-classifiers = [dce_5, dce_5]
+classifiers = [dce_1, dce_2, dce_3, dce_4]
 
 
 class DCEClassifierBagging:
@@ -33,7 +33,7 @@ class DCEClassifierBagging:
 
         :return: console printings
         """
-        [print(classifier.get_accuracy) for classifier in classifiers]
+        [print(classifier.get_accuracy()) for classifier in classifiers]
 
     @staticmethod
     def classify(schema):
@@ -66,11 +66,10 @@ class DCEClassifierBagging:
                     true_positive += 1
                 else:
                     true_negative += 1
+            elif guess == "DCE":
+                false_positive += 1
             else:
-                if guess == "DCE":
-                    false_positive += 1
-                else:
-                    false_negative += 1
+                false_negative += 1
 
         self.accuracy = (true_positive + true_negative) / len(schema_set)
         self.sensitivity = true_positive / (true_positive + false_negative)

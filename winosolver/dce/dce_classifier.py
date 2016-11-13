@@ -62,12 +62,10 @@ def new_features(schema):
         feature_set['sentence'] = is_dce_structure(schema)
 
         # R2: Criteria 2
-        if is_causal_relation(schema):
-            feature_set['logical_link'] = "causal"
-        elif is_opposition_relation(schema):
-            feature_set['logical_link'] = "opposition"
+        if is_causal_relation(schema) or is_opposition_relation(schema):
+            feature_set['logical_link'] = "causal or opposition"
         else:
-            feature_set['logical_link'] = "other"
+            feature_set['logical_link'] = "non causal and non opposition"
 
         # Full structure of the snippet
         feature_set['snippet'] = str(snippet.get_tag_sequence())
@@ -129,9 +127,9 @@ class DirectCausalEventClassifier:
 
         print("Train set with " + str(dce_percentage * train_length) + " DCE schema. (" + str(dce_percentage) + ")")
 
-        # TODO change feature function name
-        self.train_set = [(new_features(schema), schema.get_type()) for schema in self.train_schemes]
-        self.test_set = [(new_features(schema), schema.get_type()) for schema in self.test_schemes]
+        # Creating the training and testing sets
+        self.train_set = [(features(schema), schema.get_type()) for schema in self.train_schemes]
+        self.test_set = [(features(schema), schema.get_type()) for schema in self.test_schemes]
         print("Feature set created in " + str(int((time.time() - debut) / 60) + 1) + " minute(s).")
         debut = time.time()
 

@@ -1,11 +1,13 @@
 from winosolver.schema.XMLParser import *
+from winosolver.dce.features_tools import *
 
 schemes = parse_xml()
 add_labels(schemes)
 
-# print([schemes.index(schema) for schema in schemes if schema.get_type() == "DCE"])
+print([schemes.index(schema) for schema in schemes if schema.get_type() == "DCE"])
 DCE = [0, 1, 6, 7, 8, 9, 10, 11, 14, 15, 22, 23, 28, 29, 30, 31, 34, 35, 38, 39, 44, 45, 50, 51, 68, 69, 88, 89, 134,
        135, 146, 147, 150, 151, 210, 211, 214, 215, 226, 227, 252, 253, 254, 259, 260, 261, 262, 263, 264, 267, 268]
+
 
 prob_DCE = len(DCE) / len(schemes)
 
@@ -32,10 +34,14 @@ non_R1 = [8, 9, 39, 46, 47, 52, 53, 56, 57, 64, 65, 66, 67, 69, 76, 77, 84, 85, 
 
 # Calculate the new ensembles
 R1 = [schemes.index(schema) for schema in schemes if schemes.index(schema) not in non_R1]
-R1_DCE = [schemes.index(schema) for schema in schemes if schemes.index(schema) in R1 and schema.get_type() == "DCE"]
-R1_non_DCE = [schemes.index(schema) for schema in schemes if schemes.index(schema) in R1 and schema.get_type() != "DCE"]
-DCE_non_R1 = [schemes.index(schema) for schema in schemes if schemes.index(schema) in non_R1 and schema.get_type() == "DCE"]
-non_DCE_non_R1 = [schemes.index(schema) for schema in schemes if schemes.index(schema) in non_R1 and schema.get_type() != "DCE"]
+R1_DCE = [schemes.index(schema) for schema in schemes if schemes.index(schema) in R1 and
+          schema.get_type() == "DCE"]
+R1_non_DCE = [schemes.index(schema) for schema in schemes if schemes.index(schema) in R1 and
+              schema.get_type() != "DCE"]
+DCE_non_R1 = [schemes.index(schema) for schema in schemes if schemes.index(schema) in non_R1 and
+              schema.get_type() == "DCE"]
+non_DCE_non_R1 = [schemes.index(schema) for schema in schemes if schemes.index(schema) in non_R1 and
+                  schema.get_type() != "DCE"]
 
 print("P(DCE) = " + str(len(DCE)/len(schemes)))
 print("P(R1) = " + str(len(R1)/len(schemes)))
@@ -45,9 +51,46 @@ print("P(non-DCE | R1) = " + str(len(R1_non_DCE) / len(R1)))
 print("P(R1 | DCE) = " + str(len(R1_DCE) / len(DCE)))
 print("P(DCE | non-R1) = " + str(len(DCE_non_R1) / len(non_R1)))
 
-# print("P(non-R1 | DCE) = " + str(len(DCE_non_R1) / len(DCE)))
-# print("P(R1 | non-DCE) = " + str(len(R1_non_DCE) / len(non_DCE)))
-# print("P(non-R1 | non-DCE) = " + str(len(non_DCE_non_R1) / len(non_DCE)))
-# print()
-# print("P(non-DCE | non-R1) = " + str(len(non_DCE_non_R1) / len(non_R1)))
+# Calculate the new ensembles
+R2 = [schemes.index(schema) for schema in schemes if is_causal_relation(schema) or
+      is_opposition_relation(schema)]
+non_R2 = [schemes.index(schema) for schema in schemes if schemes.index(schema) not in R2]
+R2_DCE = [schemes.index(schema) for schema in schemes if schemes.index(schema) in R2 and
+          schema.get_type() == "DCE"]
+R2_non_DCE = [schemes.index(schema) for schema in schemes if schemes.index(schema) in R2 and
+              schema.get_type() != "DCE"]
+DCE_non_R2 = [schemes.index(schema) for schema in schemes if schemes.index(schema) in non_R2 and
+              schema.get_type() == "DCE"]
+non_DCE_non_R2 = [schemes.index(schema) for schema in schemes if schemes.index(schema) in non_R2 and
+                  schema.get_type() != "DCE"]
+"""
+print("-----")
+print("P(DCE) = " + str(len(DCE) / len(schemes)))
+print("P(R2) = " + str(len(R2) / len(schemes)))
+print(" ")
+print("P(DCE | R2) = " + str(len(R2_DCE) / len(R2)))
+print("P(non-DCE | R2) = " + str(len(R2_non_DCE) / len(R2)))
+print("P(R2 | DCE) = " + str(len(R2_DCE) / len(DCE)))
+print("P(DCE | non-R2) = " + str(len(DCE_non_R2) / len(non_R2)))
+"""
 
+# Calculate the new ensembles
+R3 = [schemes.index(schema) for schema in schemes if "S" in snippet_verb(schema)]
+non_R3 = [schemes.index(schema) for schema in schemes if schemes.index(schema) not in R3]
+R3_DCE = [schemes.index(schema) for schema in schemes if schemes.index(schema) in R3 and
+          schema.get_type() == "DCE"]
+R3_non_DCE = [schemes.index(schema) for schema in schemes if schemes.index(schema) in R3 and
+              schema.get_type() != "DCE"]
+DCE_non_R3 = [schemes.index(schema) for schema in schemes if schemes.index(schema) in non_R3 and
+              schema.get_type() == "DCE"]
+non_DCE_non_R3 = [schemes.index(schema) for schema in schemes if schemes.index(schema) in non_R3 and
+                  schema.get_type() != "DCE"]
+
+print("-----")
+print("P(DCE) = " + str(len(DCE) / len(schemes)))
+print("P(R3) = " + str(len(R3) / len(schemes)))
+print(" ")
+print("P(DCE | R3) = " + str(len(R3_DCE) / len(R3)))
+print("P(non-DCE | R3) = " + str(len(R3_non_DCE) / len(R3)))
+print("P(R3 | DCE) = " + str(len(R3_DCE) / len(DCE)))
+print("P(DCE | non-R3) = " + str(len(DCE_non_R3) / len(non_R3)))

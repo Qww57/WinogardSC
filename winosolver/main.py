@@ -13,8 +13,8 @@ def main():
     os.system("cls")
 
     # Getting the user's input
-    #pre_loaded = input("Run preloaded example? (y/n)")
-    pre_loaded = 'y'
+    pre_loaded = input("Run preloaded example? (y/n)")
+
     if pre_loaded is 'y' or pre_loaded is 'Y':
         sentence = "Metz football team won against the one from Paris because it was better."
         snippet = "it was better"

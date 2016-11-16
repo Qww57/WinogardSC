@@ -49,7 +49,7 @@ class DCEClassifierBagging:
     def compute_efficiency(self):
         """
         Compute the accuracy, sensitivity and specificity obtained by the bagging of all classifiers for all the
-        Winograd scheme.
+        Winograd schemas.
 
         :return: (accuracy, sensitivity, specificity)
         """

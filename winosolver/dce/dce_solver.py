@@ -1,4 +1,4 @@
-
+""" Script used in order to solve DCE schemas """
 
 from winosolver.dce.features_tools import *
 

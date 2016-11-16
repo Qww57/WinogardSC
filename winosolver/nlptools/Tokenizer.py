@@ -56,5 +56,4 @@ def should_add(search_terms, sentence, type):
 
 def detect_first_names(text):
     # TODO See with Standford NRE Tagger - See also with CoreNLP from their university
-    # FIXME
     return [token for token in tokenize_in_sentences(text) if not token.islower() and not token.isupper()]

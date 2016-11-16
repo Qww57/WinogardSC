@@ -1,3 +1,5 @@
+""" Scripts containing all DCE features used in the project """
+
 from nltk import wordpunct_tokenize
 from nltk.corpus import wordnet as wn
 from PyDictionary import PyDictionary
@@ -216,7 +218,7 @@ def snippet_verb(schema):
 
 
 def is_dce_structure(schema):
-    # Basic structure of schema
+    # Basic structure of DCE schemas
     structure = ["N", "V", "N", "IN", "N", "V"]
 
     # Pre-processing
@@ -242,10 +244,3 @@ def is_sub_sequence(sub_seq, seq):
             return True
     else:
         return False
-
-
-from winosolver.schema.XMLParser import *
-schemes = parse_xml()
-# [print(schemes.index(schema), snippet_verb(schema)) for schema in schemes if "S" in snippet_verb(schema)]
-# print(is_state_verb(schemes[0]))
-

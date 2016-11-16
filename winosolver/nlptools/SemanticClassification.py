@@ -1,4 +1,8 @@
+""" Script focusing on semantic classification """
+
 from nltk.corpus import wordnet as wn
+
+" NOT USED IN THE PROJECT "
 
 
 def semantic_field(word, similarity):

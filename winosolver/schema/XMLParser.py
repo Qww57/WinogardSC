@@ -12,7 +12,7 @@ def parse_xml():
     :return: List of Winograd Schemas
     """
 
-    schemes = []
+    schemas = []
 
     # Loading the XML file
     script_dir = os.path.dirname(__file__)
@@ -52,25 +52,25 @@ def parse_xml():
         source = schema.source.cdata
 
         new_schema = Schema(id, text, snippet, pron, answer_a, answer_b, correct, source)
-        schemes.append(new_schema)
+        schemas.append(new_schema)
         id += 1
 
-    return schemes
+    return schemas
 
 dce = [[0, 1], [6, 7], [8, 9], [10, 11], [14, 15], [22, 23], [28, 29], [30, 31], [34, 35], [38, 39], [44, 45],
        [50, 51], [68, 69], [88, 89], [134, 135], [146, 147], [150, 151], [210, 211], [214, 215], [226, 227],
        [252, 253, 254], [259, 260], [261, 262],[263, 264], [267, 268]]
 
 
-def add_labels(schemes):
+def add_labels(schemas):
     """
     Tag the schemas from manually created list of index.
 
-    :param schemes: schemes that should be tagged
+    :param schemas: schemas that should be tagged
     :return: void functions
     """
 
-    for schema in schemes:
+    for schema in schemas:
         for element in dce:
             if schema.ID in element:
                 schema.set_type("DCE")

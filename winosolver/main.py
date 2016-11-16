@@ -16,7 +16,6 @@ def main():
     #pre_loaded = input("Run preloaded example? (y/n)")
     pre_loaded = 'y'
     if pre_loaded is 'y' or pre_loaded is 'Y':
-        """
         sentence = "Metz football team won against the one from Paris because it was better."
         snippet = "it was better"
         pronoun = "it"
@@ -24,39 +23,6 @@ def main():
         answer_b = "the one from Paris"
         sentence_bis = "Metz football team won against the one from Paris because it was bad."
         snippet_bis = "it was bad"
-
-        sentence = "The forward player scored to the goalkeeper because he was good."
-        snippet = "he was good"
-        pronoun = "he"
-        answer_a = "The forward player"
-        answer_b = "The goalkeeper"
-        sentence_bis = "The forward player scored to the goalkeeper because he was bad."
-        snippet_bis = "he was bad"
-        """
-        sentence = "The forward player missed against the goalkeeper because he was good."
-        snippet = "he was good"
-        pronoun = "he"
-        answer_a = "The forward player"
-        answer_b = "The goalkeeper"
-        sentence_bis = "The forward player missed against the goalkeeper because he was bad."
-        snippet_bis = "he was bad"
-        """
-        sentence = "The forward player scored to the goalkeeper although he was good."
-        snippet = "he was good"
-        pronoun = "he"
-        answer_a = "The forward player"
-        answer_b = "The goalkeeper"
-        sentence_bis = "The forward player scored to the goalkeeper although he was bad."
-        snippet_bis = "he was bad"
-
-        sentence = "The forward player missed against the goalkeeper although he was good."
-        snippet = "he was good"
-        pronoun = "he"
-        answer_a = "The forward player"
-        answer_b = "The goalkeeper"
-        sentence_bis = "The forward player missed against the goalkeeper although he was bad."
-        snippet_bis = "he was bad"
-        """
     else:
         print("---- Enter schema to solve ----")
         sentence = input("Enter the full sentence of the schema:")
@@ -91,20 +57,15 @@ def main():
     current.print()
 
     dce_classifier = DCEClassifierBagging()
-    dce_classifier.compute_efficiency()
     dce_solver = DirectCausalEventSolver()
 
     # Process of resolving one schema
-    """
     print("---- CLASSIFYING THE SCHEMA ----")
     guess = dce_classifier.classify(current)
     current.set_type(guess)
     opposite.set_type(guess)
     print("Sentence has been classified as " + guess)
     print(" ")
-    """
-    current.set_type("DCE")
-    opposite.set_type("DCE")
 
     print("---- ANSWERING THE FIRST SCHEMA ----")
     print(current.sentence)

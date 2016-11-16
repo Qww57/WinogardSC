@@ -46,3 +46,10 @@ def get_frequent_related_itemsets(keywords, support):
     results = list(set(results))
     print(str(len(results)) + " frequent item sets with min support of " + str(support) + " for " + str(keywords))
     return results, sentences
+
+
+test = get_frequent_related_itemsets(["Dog", "Cat"], 3)
+print(" ")
+[print(sentence) for sentence in test[1]]
+print(" ")
+print(test[0])

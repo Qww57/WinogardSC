@@ -11,6 +11,7 @@ def semantic_field(word, similarity):
     """
 
     s_field = list()
+
     # Synonyms that share a common meaning
     for synset in wn.synsets(word):
         # Lemma: a specific sense of a specific word

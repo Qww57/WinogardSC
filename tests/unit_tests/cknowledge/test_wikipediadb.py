@@ -4,7 +4,7 @@ import string
 import unittest
 
 
-# FIXME WITH STATIC PATHS
+# FIXME NOT WORKING ANYMORE DUE TO PATHS PROBLEMS WHEN READING FILES
 
 
 class TestWikipediaDatabase(unittest.TestCase):

@@ -14,7 +14,7 @@ def tokenize_in_sentences(paragraph):
     :return:
     """
     # Tokenizing the text into sentences based on punctuation
-    sentences = tokenizer.tokenize_gse_result(paragraph)
+    sentences = tokenizer.tokenize(paragraph)
 
     # Tokenizing the text into sentences based on layout
     set = []

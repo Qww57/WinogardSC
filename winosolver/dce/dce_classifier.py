@@ -3,7 +3,6 @@
 import random
 import time
 from winosolver import Serializer
-from winosolver.nlptools.Chunker import *
 from winosolver.dce.features_tools import *
 from winosolver.nlptools.GrammaticalClassification import analyze
 from winosolver.schema.XMLParser import *
@@ -32,7 +31,6 @@ def features(schema):
         # Full structure of the snippet
         feature_set['snippet'] = str(snippet.get_tag_sequence())
 
-        # TODO categorize schema_type of verb like action or state
         feature_set['snippet_verb'] = snippet_verb(schema)
 
         # Criteria 2
@@ -49,6 +47,7 @@ def features(schema):
 
 
 def new_features(schema):
+    """Not currently used"""
     feature_set = {}
     try:
         snippet = analyze(schema.snippet)
@@ -120,12 +119,18 @@ class DirectCausalEventClassifier:
             random.shuffle(schemes)
             self.train_schemes = schemes[0:train_length]
             self.test_schemes = schemes[(train_length + 1):length]
-            count = 0
-            for schema in self.train_schemes:
-                count = count + 1 if schema.get_type() is "DCE" else count
-            dce_percentage = count / train_length
+            train_set_dce = [schema for schema in self.train_schemes if schema.get_type() is "DCE"]
+            print(len(train_set_dce))
+            dce_percentage = len(train_set_dce) / train_length
 
-        print("Train set with " + str(dce_percentage * train_length) + " DCE schema. (" + str(dce_percentage) + ")")
+        print("Train set with " + str(dce_percentage * 100) + " of DCE schemas.")
+
+        # Oversampling the DCE schema because of class imbalance problem
+        self.train_schemes.extend(train_set_dce)
+        self.train_schemes.extend(train_set_dce)
+        train_set_dce = [schema for schema in self.train_schemes if schema.get_type() is "DCE"]
+        dce_percentage = len(train_set_dce) / (len(self.train_schemes))
+        print("Train set with " + str(dce_percentage * 100) + " of DCE schemas after oversampling.")
 
         # Creating the training and testing sets
         self.train_set = [(features(schema), schema.get_type()) for schema in self.train_schemes]

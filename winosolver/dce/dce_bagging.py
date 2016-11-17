@@ -3,16 +3,32 @@
 from winosolver.Serializer import load
 from winosolver.schema.XMLParser import parse_xml, add_labels
 from collections import Counter
+import os
+
+# Paths to the classifiers
+base = os.path.dirname(os.path.abspath(__file__))
+location_1 = os.path.join(base, "..\\..\\data\\naive_bayes_77_10-07-16").replace("\\", "//")
+location_2 = os.path.join(base, "..\\..\\data\\naive_bayes_75_10-09-16").replace("\\", "//")
+location_3 = os.path.join(base, "..\\..\\data\\naive_bayes_80_10-09-16").replace("\\", "//")
+location_4 = os.path.join(base, "..\\..\\data\\naive_bayes_85_10-08-16").replace("\\", "//")
+# location_5 = os.path.join(base, "..\\..\\data\\naive_bayes_80_11-14-16").replace("\\", "//")
+
+print("Loading classifiers: ")
+
+print(str(location_1))
+dce_1 = load(location_1)
+print(str(location_2))
+dce_2 = load(location_2)
+print(str(location_3))
+dce_3 = load(location_3)
+print(str(location_4))
+dce_4 = load(location_4)
+print("Classifiers loaded successfully")
+print(" ")
+# dce_5 = load(location_5)
 
 
-# Paths are set to be called from main
-dce_1 = load("..\\data\\naive_bayes_77_10-07-16")
-dce_2 = load("..\\data\\naive_bayes_75_10-09-16")
-dce_3 = load("..\\data\\naive_bayes_80_10-09-16")
-dce_4 = load("..\\data\\naive_bayes_85_10-08-16")
-dce_5 = load("..\\data\\naive_bayes_80_11-14-16")
-
-classifiers = [dce_1, dce_2, dce_3, dce_4]
+classifiers = [dce_1, dce_2, dce_3, dce_4, dce_4]
 
 
 class DCEClassifierBagging:

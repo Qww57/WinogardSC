@@ -47,7 +47,6 @@ def dce(current, opposite):
 
 
 def main():
-    os.system("cls")
 
     # Getting the user's input
     pre_loaded = input("Run preloaded examples? (y/n)")

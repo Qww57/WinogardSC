@@ -86,8 +86,8 @@ def main():
         dce(current, opposite)
 
     if pre_loaded == '3':
-        script_dir = os.path.dirname(__file__)
-        path = os.path.join(script_dir, "/data/test.xml")
+        base = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(base, "data/test.xml")
         print(path)
         schemas = read_schema(path)
 
@@ -102,7 +102,7 @@ def main():
             print("-> Classified as " + guess)
             answer = dce_solver.solve(current)
             print("-> Answer: " + str(answer))
-
+            print(" "
     else:
         print("---- Enter schema to solve ----")
         sentence = input("Enter the full sentence of the schema:")

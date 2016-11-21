@@ -2,7 +2,7 @@
 
 import os
 import warnings
-from winosolver.schema.XMLParser import parse_xml
+from winosolver.schema.XMLParser import parse_xml, read_schema
 from winosolver.schema.Schema import Schema
 from winosolver.dce.dce_bagging import DCEClassifierBagging
 from winosolver.dce.dce_solver import DirectCausalEventSolver, features
@@ -18,12 +18,13 @@ def dce(current, opposite):
     :param opposite:
     :return:
     """
-    dce_classifier = DCEClassifierBagging()
-    dce_solver = DirectCausalEventSolver()
 
     # Process of resolving one schema
     current.print()
     opposite.print()
+
+    dce_classifier = DCEClassifierBagging()
+    dce_solver = DirectCausalEventSolver()
 
     print("---- CLASSIFYING THE SCHEMA ----")
     print(current.sentence)
@@ -49,10 +50,14 @@ def dce(current, opposite):
 def main():
 
     # Getting the user's input
-    pre_loaded = input("Run preloaded examples? (y/n)")
+    pre_loaded = input("Main script of Winosolver function \n"
+                       "1 - Enter schema from console \n"
+                       "2 - Run preloaded examples? \n"
+                       "3 - Read XML file (path should be 'data/test.xml') \n"
+                       "Which input should be used?")
     print(" ")
 
-    if pre_loaded is 'y' or pre_loaded is 'Y':
+    if pre_loaded is 'y' or pre_loaded is '2':
 
         # First example
         sentence = "Metz football team won against the one from Paris because it was better."
@@ -79,6 +84,24 @@ def main():
 
         print("Resolution of the second example: ")
         dce(current, opposite)
+
+    if pre_loaded == '3':
+        script_dir = os.path.dirname(__file__)
+        path = os.path.join(script_dir, "/data/test.xml")
+        print(path)
+        schemas = read_schema(path)
+
+        dce_classifier = DCEClassifierBagging()
+        dce_solver = DirectCausalEventSolver()
+
+        for current in schemas:
+            print(current)
+            print(current.sentence)
+            guess = dce_classifier.classify(current)
+            current.set_type(guess)
+            print("-> Classified as " + guess)
+            answer = dce_solver.solve(current)
+            print("-> Answer: " + str(answer))
 
     else:
         print("---- Enter schema to solve ----")

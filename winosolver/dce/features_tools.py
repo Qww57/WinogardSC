@@ -2,14 +2,14 @@
 
 from nltk import wordpunct_tokenize
 from nltk.corpus import wordnet as wn
-from PyDictionary import PyDictionary
+# from PyDictionary import PyDictionary
 from urllib.request import urlopen
 from winosolver.nlptools.Chunker import *
 from winosolver.nlptools.GrammaticalClassification import analyze
 import json
 
 
-dictionary = PyDictionary()
+# dictionary = PyDictionary()
 
 
 def antonym(word):
@@ -33,8 +33,8 @@ def antonym(word):
                         result.append(j.antonyms()[0].name())
 
         result = list(set(result))
-        if len(result) is 0 and dictionary.antonym(word):
-            result.extend(dictionary.antonym(word))
+        #if len(result) is 0 and dictionary.antonym(word):
+        #   result.extend(dictionary.antonym(word))
         return result
     except Exception as e:
         return result

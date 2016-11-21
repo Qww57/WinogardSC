@@ -13,15 +13,15 @@ class Schema:
         :param answer: correct answer among the two proposition
         """
         self.ID = ID
-        self.sentence = sentence
-        self.snippet = snip
-        self.pronoun = pron
-        self.answer_A = prop1
-        self.answer_B = prop2
+        self.sentence = sentence.replace("\n", " ")
+        self.snippet = snip.replace("\n", " ")
+        self.pronoun = pron.replace("\n", " ")
+        self.answer_A = prop1.replace("\n", " ")
+        self.answer_B = prop2.replace("\n", " ")
         if 'A' in answer:
-            self.correct = prop1
+            self.correct = prop1.replace("\n", " ")
         elif 'B' in answer:
-            self.correct = prop2
+            self.correct = prop2.replace("\n", " ")
         else:
             self.correct = "unknown"
         self.source = source
@@ -54,5 +54,5 @@ class Schema:
         print("")
 
     def __str__(self):
-        return str(self.ID) + ':' + str(self.sentence) + ' - ' + str(self.pronoun) + ' - ' + str(self.answer_A) \
-                + ' or ' + str(self.answer_B)
+        return (str(self.ID) + ':' + str(self.sentence) + ' - ' + str(self.pronoun) + ' - ' + str(self.answer_A) \
+                + ' or ' + str(self.answer_B)).replace("  ", " ")

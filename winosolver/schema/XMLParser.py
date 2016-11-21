@@ -5,19 +5,9 @@ import os
 import untangle
 
 
-def parse_xml():
-    """
-    Read xml file.
-
-    :return: List of Winograd Schemas
-    """
+def read_schema(path):
 
     schemas = []
-
-    # Loading the XML file
-    script_dir = os.path.dirname(__file__)
-    rel_path = "WSCollection.xml"
-    path = os.path.join(script_dir, rel_path)
     id = 0
 
     # Reading the XML file
@@ -56,6 +46,21 @@ def parse_xml():
         id += 1
 
     return schemas
+
+
+def parse_xml():
+    """
+    Read xml file.
+
+    :return: List of Winograd Schemas
+    """
+
+    # Loading the XML file
+    script_dir = os.path.dirname(__file__)
+    rel_path = "WSCollection.xml"
+    path = os.path.join(script_dir, rel_path)
+
+    return read_schema(path)
 
 dce = [[0, 1], [6, 7], [8, 9], [10, 11], [14, 15], [22, 23], [28, 29], [30, 31], [34, 35], [38, 39], [44, 45],
        [50, 51], [68, 69], [88, 89], [134, 135], [146, 147], [150, 151], [210, 211], [214, 215], [226, 227],

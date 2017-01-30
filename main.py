@@ -102,7 +102,7 @@ def main():
             print("-> Classified as " + guess)
             answer = dce_solver.solve(current)
             print("-> Answer: " + str(answer))
-            print(" "
+            print(" ")
     else:
         print("---- Enter schema to solve ----")
         sentence = input("Enter the full sentence of the schema:")
